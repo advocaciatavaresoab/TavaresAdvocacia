@@ -1,0 +1,391 @@
+
+/* ==================== BADGE DE PERÍCIA ==================== */
+.badge-pericia {
+    padding: 0.2rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-pericia.medica {
+    background: #fbeae8;
+    color: #c94b3f;
+}
+
+.badge-pericia.social {
+    background: #eaf0fc;
+    color: #3568c9;
+}
+
+.badge-pericia.ambas {
+    background: #e7f6ec;
+    color: #2f9e5b;
+}
+
+/* ==================== BADGE DE TIPO JUDICIAL ==================== */
+.badge-judicial {
+    padding: 0.2rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-judicial.judicial {
+    background: #fbf1de;
+    color: #c98a1f;
+}
+
+.badge-judicial.administrativa {
+    background: #f4f5f7;
+    color: #64708a;
+}
+
+/* ==================== STATUS ==================== */
+.status {
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.status.active {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+.status.completed {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.status.pending {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.status.urgent {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+/* ==================== RESULTADO ==================== */
+.badge-resultado {
+    padding: 0.2rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-resultado.favoravel {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.badge-resultado.desfavoravel {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.badge-resultado.aguardando {
+    background: var(--bg);
+    color: var(--text-muted);
+}
+
+/* ==================== DATAS NA TABELA ==================== */
+.data-pericia {
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.data-pericia.proxima {
+    color: var(--info);
+    font-weight: 600;
+}
+
+.data-pericia.passada {
+    color: var(--text-faint);
+}
+
+.data-pericia.hoje {
+    color: var(--warning);
+    font-weight: 700;
+}
+
+/* ==================== HOVER ==================== */
+tbody tr:hover .mono-text {
+    color: var(--gold-600);
+}
+/* ==================== MODAL VISUALIZAR PERÍCIA ==================== */
+.modal-visualizar-pericia {
+    max-width: 750px;
+}
+
+.pericia-perfil-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--navy-950), var(--navy-800));
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.pericia-avatar-grande {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4a9eff, #1e5aa8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.pericia-info-principal {
+    flex: 1;
+    min-width: 0;
+}
+
+.pericia-info-principal h3 {
+    color: white;
+    font-size: 1.3rem;
+    margin: 0 0 0.25rem 0;
+    font-family: var(--font-mono);
+}
+
+.pericia-info-principal .pericia-cliente-texto {
+    color: var(--gold-300);
+    font-size: 1rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+/* ==================== GRID DE DETALHES ==================== */
+.pericia-detalhes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.pericia-detalhes-grid .detalhe-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: var(--bg);
+    border-radius: 8px;
+}
+
+.pericia-detalhes-grid .detalhe-item i {
+    color: #4a9eff;
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+}
+
+/* ==================== DATAS ==================== */
+.pericia-datas-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.data-card {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 4px solid;
+}
+
+.data-card.medica {
+    background: #e8f5ff;
+    border-left-color: #4a9eff;
+}
+
+.data-card.medica i {
+    color: #1e5aa8;
+    font-size: 1.5rem;
+}
+
+.data-card.social {
+    background: #fff5e8;
+    border-left-color: #ff9500;
+}
+
+.data-card.social i {
+    color: #a86400;
+    font-size: 1.5rem;
+}
+
+.data-card label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.data-card span {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy-950);
+    font-family: var(--font-mono);
+}
+
+/* ==================== LOCAL ==================== */
+.pericia-local-box {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: var(--bg);
+    border-radius: 10px;
+    border-left: 4px solid var(--gold-500);
+    margin-bottom: 1.5rem;
+}
+
+.pericia-local-box i {
+    color: var(--gold-600);
+    font-size: 1.5rem;
+}
+
+.pericia-local-box label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.pericia-local-box span {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--navy-950);
+}
+
+/* ==================== RESULTADO ==================== */
+.pericia-resultado-box {
+    padding: 1rem;
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border: 2px solid #4a9eff;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.pericia-resultado-box label {
+    display: block;
+    font-size: 0.75rem;
+    color: #1e5aa8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.pericia-resultado-box span {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e5aa8;
+}
+
+/* ==================== OBSERVAÇÕES ==================== */
+.pericia-obs-box {
+    padding: 1rem;
+    background: var(--bg);
+    border-radius: 8px;
+    border-left: 3px solid var(--gold-500);
+}
+
+.pericia-obs-box label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.pericia-obs-box p {
+    margin: 0;
+    color: var(--navy-950);
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+/* ==================== RESPONSIVO ==================== */
+@media (max-width: 768px) {
+    .pericia-perfil-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .pericia-detalhes-grid,
+    .pericia-datas-box {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-visualizar-pericia {
+        max-width: 95%;
+    }
+}
+/* ==================== RESPONSIVO ==================== */
+@media (max-width: 1024px) {
+    .stats-grid-mini {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .page-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .search-box {
+        min-width: 100%;
+        width: 100%;
+    }
+    
+    .stats-grid-mini {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .acoes {
+        flex-direction: column;
+    }
+    
+    .table-container {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        min-width: 850px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid-mini {
+        grid-template-columns: 1fr 1fr;
+    }
+}

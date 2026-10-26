@@ -1,0 +1,405 @@
+
+/* ==================== CARDS DESTAQUE ==================== */
+.destaque-positivo span {
+    color: var(--success) !important;
+}
+
+.destaque-negativo span {
+    color: var(--danger) !important;
+}
+
+.destaque-saldo span {
+    color: var(--info) !important;
+    font-size: 1.3rem !important;
+}
+
+.destaque-comissao span {
+    color: #8b5cf6 !important;
+}
+
+/* ==================== BADGES DE FLUXO ==================== */
+.badge-fluxo {
+    padding: 0.25rem 0.7rem;
+    border-radius: 15px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-fluxo.entrada {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.badge-fluxo.saida {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.badge-fluxo.comissao {
+    background: #f3e8ff;
+    color: #8b5cf6;
+}
+
+/* ==================== BADGE DE ORIGEM ==================== */
+.badge-origem {
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    display: inline-block;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.badge-origem.processo {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.badge-origem.parceiro {
+    background: #f3e8ff;
+    color: #8b5cf6;
+}
+
+.badge-origem.manual {
+    background: var(--bg);
+    color: var(--text-muted);
+}
+
+/* ==================== VALORES ==================== */
+.valor-positivo {
+    color: var(--success);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+
+.valor-negativo {
+    color: var(--danger);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+
+.valor-pendente {
+    color: var(--warning);
+    font-weight: 600;
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+
+/* ==================== STATUS ==================== */
+.status-pagamento {
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.status-pagamento.pago {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.status-pagamento.pendente {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.status-pagamento.aguardando {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.status-pagamento.devolvido {
+    background: var(--bg);
+    color: var(--text-faint);
+}
+
+.status-pagamento.cancelado {
+    background: var(--bg);
+    color: var(--text-faint);
+    text-decoration: line-through;
+}
+
+/* ==================== PARCELA ==================== */
+.badge-parcela {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: var(--bg);
+    padding: 0.1rem 0.4rem;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+/* ==================== GRÁFICO ==================== */
+.grafico-barras {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    height: 200px;
+    overflow-x: auto;
+}
+
+.barra-mes {
+    flex: 1;
+    min-width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.barra-mes .barra {
+    width: 100%;
+    max-width: 60px;
+    border-radius: 6px 6px 0 0;
+    transition: height 0.5s ease;
+    position: relative;
+    cursor: pointer;
+    min-height: 4px;
+}
+
+.barra-mes .barra:hover {
+    opacity: 0.8;
+}
+
+.barra-mes .barra.entradas {
+    background: linear-gradient(180deg, var(--success), #227b45);
+}
+
+.barra-mes .barra.saidas {
+    background: linear-gradient(180deg, var(--danger), #a03b34);
+}
+
+.barra-mes .barra-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.barra-mes .barra-valor {
+    font-size: 0.65rem;
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+
+/* ==================== BOTÕES ==================== */
+.btn-recalcular {
+    background: var(--info-bg);
+    color: var(--info);
+    border: 1px solid var(--info);
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+}
+
+.btn-recalcular:hover {
+    background: var(--info);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 22, 58, 0.1);
+}
+
+.btn-recalcular:active {
+    transform: translateY(0);
+}
+
+.btn-recalcular i {
+    margin-right: 0.4rem;
+}
+
+.btn-parceiro {
+    background: #8b5cf6;
+    color: white;
+    border: 1px solid #8b5cf6;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+}
+
+.btn-parceiro:hover {
+    background: #7c3aed;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.btn-parceiro:active {
+    transform: translateY(0);
+}
+
+.btn-parceiro i {
+    margin-right: 0.4rem;
+}
+
+.btn-gerar-processos {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid var(--success);
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+}
+
+.btn-gerar-processos:hover {
+    background: var(--success);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.btn-gerar-processos:active {
+    transform: translateY(0);
+}
+
+.btn-gerar-processos i {
+    margin-right: 0.4rem;
+}
+
+/* ==================== MODAL PARCELAS ==================== */
+.campo-parcela {
+    background: var(--bg);
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.campo-parcela:hover {
+    border-color: var(--gold-500);
+}
+
+.campo-parcela label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+.campo-parcela input[type="date"] {
+    width: 100%;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    background: white;
+}
+
+.campo-parcela .parcela-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+.campo-parcela .parcela-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--success);
+}
+
+.campo-parcela .parcela-check label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    margin: 0;
+}
+
+/* ==================== CORREÇÃO DOS CARDS ==================== */
+.stats-grid-mini .stat-card-mini {
+    overflow: hidden;
+}
+
+.stats-grid-mini .stat-card-mini span {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy-950);
+    font-family: var(--font-mono);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.stats-grid-mini .stat-card-mini div {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+}
+
+.stats-grid-mini .stat-card-mini h4 {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ==================== RESPONSIVO ==================== */
+@media (max-width: 768px) {
+    .grafico-barras {
+        height: 150px;
+        padding: var(--space-2);
+    }
+    
+    .table-container {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        min-width: 900px;
+    }
+    
+    .page-actions {
+        flex-wrap: wrap;
+    }
+    
+    .page-actions .btn-parceiro,
+    .page-actions .btn-gerar-processos,
+    .page-actions .btn-recalcular {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.7rem;
+    }
+    
+    .stats-grid-mini .stat-card-mini span {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .campo-parcela {
+        padding: 0.5rem;
+    }
+    
+    .stats-grid-mini {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .stats-grid-mini .stat-card-mini span {
+        font-size: 0.85rem;
+    }
+}

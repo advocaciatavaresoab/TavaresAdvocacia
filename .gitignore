@@ -1,0 +1,193 @@
+
+# ==========================================
+# DEPENDÊNCIAS
+# ==========================================
+node_modules/
+jspm_packages/
+bower_components/
+vendor/
+
+# ==========================================
+# VARIÁVEIS DE AMBIENTE E SEGREDOS
+# ==========================================
+.env
+.env.*
+!.env.example
+!.env.template
+!.env.sample
+
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+secrets/
+.secrets/
+credentials.json
+service-account*.json
+client_secret*.json
+
+# ==========================================
+# BUILD E ARQUIVOS GERADOS
+# ==========================================
+dist/
+build/
+out/
+coverage/
+.nyc_output/
+.next/
+.nuxt/
+.output/
+.svelte-kit/
+.vercel/
+.netlify/
+.parcel-cache/
+.turbo/
+.cache/
+.eslintcache
+*.tsbuildinfo
+
+# ==========================================
+# LOGS
+# ==========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ==========================================
+# CONFIGURAÇÕES LOCAIS
+# ==========================================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ==========================================
+# WINDOWS
+# ==========================================
+Thumbs.db
+Thumbs.db:encryptable
+Desktop.ini
+$RECYCLE.BIN/
+
+# ==========================================
+# macOS
+# ==========================================
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.VolumeIcon.icns
+
+# ==========================================
+# LINUX
+# ==========================================
+*~
+.directory
+.Trash-*
+
+# ==========================================
+# EDITORES E TEMPORÁRIOS
+# ==========================================
+*.tmp
+*.temp
+*.bak
+*.orig
+*.old
+*.cache
+*.pid
+*.seed
+
+# ==========================================
+# TESTES
+# ==========================================
+.nyc_output/
+test-results/
+playwright-report/
+blob-report/
+cypress/videos/
+cypress/screenshots/
+
+# ==========================================
+# TYPESCRIPT
+# ==========================================
+*.tsbuildinfo
+
+# ==========================================
+# PYTHON (SE UTILIZAR)
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ==========================================
+# PHP / COMPOSER (SE UTILIZAR)
+# ==========================================
+/vendor/
+composer.phar
+
+# ==========================================
+# BANCO DE DADOS LOCAL
+# ==========================================
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.sql.gz
+
+# ==========================================
+# ARQUIVOS DE SISTEMA E BACKUP
+# ==========================================
+*.stackdump
+*.core
+core
+*.dmp
+
+# ==========================================
+# ARQUIVOS DE DEPLOY E INFRAESTRUTURA
+# ==========================================
+.firebase/
+firebase-debug.log
+firestore-debug.log
+*.tfstate
+*.tfstate.*
+.terraform/
+serverless/
+.aws-sam/
+
+# ==========================================
+# ARQUIVOS GRANDES E PACOTES GERADOS
+# ==========================================
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+*.iso
+*.exe
+*.msi
+
+# ==========================================
+# ARQUIVOS LOCAIS DE CONFIGURAÇÃO
+# ==========================================
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-shrinkwrap.json.bak

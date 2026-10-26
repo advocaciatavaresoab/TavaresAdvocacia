@@ -1,0 +1,254 @@
+<!-- ==================== PARCEIROS ==================== -->
+<div id="pageParceiros">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Módulo</p>
+            <h1>Parceiros</h1>
+        </div>
+        <div class="page-actions">
+            <button class="btn-primary" id="btnNovoParceiro">
+                <i class="fas fa-plus"></i> Novo parceiro
+            </button>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="buscaParceiro" placeholder="Buscar por nome, especialidade, cidade...">
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de estatísticas - Linha 1 -->
+    <div class="stats-grid-mini">
+        <div class="stat-card-mini">
+            <i class="fa-solid fa-handshake"></i>
+            <div><h4>Total</h4><span id="totalParceiros">0</span></div>
+        </div>
+        <div class="stat-card-mini">
+            <i class="fas fa-user-check"></i>
+            <div><h4>Ativos</h4><span id="parceirosAtivos">0</span></div>
+        </div>
+        <div class="stat-card-mini">
+            <i class="fas fa-user-clock"></i>
+            <div><h4>Inativos</h4><span id="parceirosInativos">0</span></div>
+        </div>
+        <div class="stat-card-mini">
+            <i class="fas fa-users"></i>
+            <div><h4>Total Indicações</h4><span id="totalIndicacoesParceiros">0</span></div>
+        </div>
+    </div>
+
+    <!-- Cards de estatísticas - Linha 2 -->
+    <div class="stats-grid-mini">
+        <div class="stat-card-mini">
+            <i class="fas fa-chart-line"></i>
+            <div><h4>Faturamento (Indicações)</h4><span id="totalFaturamentoParceiros">R$ 0,00</span></div>
+        </div>
+        <div class="stat-card-mini">
+            <i class="fas fa-hand-holding-usd"></i>
+            <div><h4>Pago aos Parceiros</h4><span id="totalPagoParceiros">R$ 0,00</span></div>
+        </div>
+        <div class="stat-card-mini">
+            <i class="fas fa-wallet"></i>
+            <div><h4>Lucro do Escritório</h4><span id="lucroParceiros">R$ 0,00</span></div>
+        </div>
+    </div>
+
+    <!-- Filtros rápidos -->
+    <div class="filtros-rapidos">
+        <button class="filtro-btn active" data-filtro="todos">Todos</button>
+        <button class="filtro-btn" data-filtro="ATIVO">Ativos</button>
+        <button class="filtro-btn" data-filtro="INATIVO">Inativos</button>
+    </div>
+
+    <!-- Tabela de parceiros -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Todos os parceiros</h2>
+            <span class="text-muted" id="contagemParceiros">0 registros</span>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome/Especialidade</th>
+                        <th>Escritório</th>
+                        <th>Contato</th>
+                        <th>Email</th>
+                        <th>Cidade</th>
+                        <th>Indicações</th>
+                        <th>Faturamento (com indicações)</th>
+                        <th>Pago ao Parceiro</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyParceiros">
+                    <tr class="row-empty">
+                        <td colspan="10">
+                            <i class="fas fa-spinner fa-pulse"></i> Carregando parceiros...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Cadastro/Edição -->
+<div class="modal-overlay" id="modalParceiro">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modalTituloParceiro">Novo Parceiro</h2>
+            <button class="modal-close" id="fecharModalParceiro">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="formParceiro">
+                <input type="hidden" id="parceiroRow" value="">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Nome completo *</label>
+                        <input type="text" id="parceiroNome" required placeholder="Nome do parceiro">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Especialidade *</label>
+                        <input type="text" id="parceiroEspecialidade" required placeholder="Ex: Advogado, Médico, Contador...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Escritório</label>
+                        <input type="text" id="parceiroEscritorio" placeholder="Nome do escritório">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Contato *</label>
+                        <input type="text" id="parceiroContato" required placeholder="(00) 00000-0000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="parceiroEmail" placeholder="email@exemplo.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Cidade</label>
+                        <input type="text" id="parceiroCidade" placeholder="Cidade">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="parceiroStatus">
+                            <option value="ATIVO">Ativo</option>
+                            <option value="INATIVO">Inativo</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="cancelarParceiro">Cancelar</button>
+            <button class="btn-salvar" id="salvarParceiro">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Visualização -->
+<div class="modal-overlay" id="modalVisualizarParceiro" data-parceiro-row="">
+    <div class="modal modal-visualizar">
+        <div class="modal-header">
+            <h2><i class="fas fa-eye"></i> Detalhes do Parceiro</h2>
+            <button class="modal-close" id="fecharModalVisualizar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="parceiro-perfil-header">
+                <div class="parceiro-avatar-grande">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+                <div class="parceiro-info-principal">
+                    <h3 id="vizParceiroNome">—</h3>
+                    <p id="vizParceiroEspecialidade" class="especialidade-texto">—</p>
+                    <span id="vizParceiroStatus" class="status active">ATIVO</span>
+                </div>
+            </div>
+            
+            <div class="parceiro-detalhes-grid">
+                <div class="detalhe-item">
+                    <i class="fas fa-building"></i>
+                    <div class="metrica-card-int">
+                        <label>Escritório</label>
+                        <span id="vizParceiroEscritorio">—</span>
+                    </div>
+                </div>
+                
+                <div class="detalhe-item">
+                    <i class="fas fa-phone"></i>
+                    <div class="metrica-card-int">
+                        <label>Contato</label>
+                        <span id="vizParceiroContato">—</span>
+                    </div>
+                </div>
+                
+                <div class="detalhe-item">
+                    <i class="fas fa-envelope"></i>
+                    <div class="metrica-card-int">
+                        <label>Email</label>
+                        <span id="vizParceiroEmail">—</span>
+                    </div>
+                </div>
+                
+                <div class="detalhe-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="metrica-card-int">
+                        <label>Cidade</label>
+                        <span id="vizParceiroCidade">—</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="parceiro-metricas">
+                <div class="metrica-card">
+                    <i class="fas fa-users"></i>
+                    <div class="metrica-card-int">
+                        <label>Total de Indicações</label>
+                        <span id="vizParceiroIndicacoes">0</span>
+                    </div>
+                </div>
+                
+                <div class="metrica-card faturamento">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="metrica-card-int">
+                        <label>Faturamento (Indicações)</label>
+                        <span id="vizParceiroFaturamento">R$ 0,00</span>
+                    </div>
+                </div>
+                
+                <div class="metrica-card pagamento">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <div class="metrica-card-int">
+                        <label>Pago ao Parceiro</label>
+                        <span id="vizParceiroPagamento">R$ 0,00</span>
+                    </div>
+                </div>
+                
+                <div class="metrica-card lucro">
+                    <i class="fas fa-wallet"></i>
+                    <div class="metrica-card-int">
+                        <label>Lucro do Escritório</label>
+                        <span id="vizParceiroLucro">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="btnFecharVisualizacao">Fechar</button>
+            <button class="btn-salvar" id="btnEditarDoVisualizar">
+                <i class="fas fa-edit"></i> Editar Parceiro
+            </button>
+        </div>
+    </div>
+</div>

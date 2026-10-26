@@ -1,0 +1,458 @@
+
+/* ==================== PAGE ACTIONS ==================== */
+.page-actions {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    margin-top: var(--space-3);
+    flex-wrap: wrap;
+}
+
+/* ==================== STATS MINI ==================== */
+.stats-grid-mini {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.stat-card-mini {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    transition: all 0.2s ease;
+}
+
+.stat-card-mini:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 22, 58, 0.08);
+    border-color: rgba(201, 162, 76, 0.3);
+}
+
+.stat-card-mini i {
+    font-size: 1.5rem;
+    color: var(--gold-500);
+    width: 40px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.stat-card-mini h4 {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+    font-weight: 500;
+}
+
+.stat-card-mini span {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy-950);
+    font-family: var(--font-mono);
+}
+
+/* ==================== FILTROS ==================== */
+.filtros-rapidos {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.filtro-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.filtro-btn:hover {
+    border-color: var(--gold-500);
+    color: var(--gold-600);
+}
+
+.filtro-btn.active {
+    background: var(--navy-900);
+    color: white;
+    border-color: var(--navy-900);
+}
+
+/* ==================== SEARCH BOX ==================== */
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-faint);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.65rem 1rem 0.65rem 2.4rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-family: var(--font-body);
+    background: var(--bg);
+    transition: all 0.2s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--gold-500);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(201, 162, 76, 0.12);
+}
+
+/* ==================== BADGES NA TABELA ==================== */
+.badge-tipo {
+    padding: 0.2rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-tipo.pf {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+.badge-tipo.pj {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+/* ==================== AÇÕES NA TABELA ==================== */
+.acoes {
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+/* ==================== STATUS NA TABELA ==================== */
+.status {
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.status.active {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+.status.urgent {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.status.completed {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.status.pending {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+/* ==================== STATUS DE PAGAMENTO ==================== */
+.status-pag {
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+}
+
+.status-pag.pago {
+    background: var(--success-bg);
+    color: var(--success);
+}
+
+.status-pag.pendente {
+    background: var(--warning-bg);
+    color: var(--warning);
+}
+
+.status-pag.vencido {
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+/* ==================== DESTAQUES DE TEXTO ==================== */
+.mono-text {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.text-success {
+    color: var(--success);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.text-muted {
+    color: var(--text-faint);
+    font-size: 0.85rem;
+}
+
+/* ==================== TOOLTIP PARA Nº PROCESSO ==================== */
+td .mono-text {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+td .mono-text:hover {
+    color: var(--gold-600);
+}
+
+/* ==================== MODAL VISUALIZAR ==================== */
+
+.detalhe-item {
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;   
+    gap: 0.15rem;
+}
+
+.detalhe-item label {
+    display: block;          
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin: 0;
+}
+
+.detalhe-item p {
+    margin: 0;                
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text);
+    word-break: break-word;
+}
+
+.detalhe-item:has(h3),
+.detalhe-item:has(h4) {
+    background: transparent;
+    border: none;
+    padding: 0;
+    display: block;
+}
+
+#visualizarProcessoBody .status {
+    font-size: 0.8rem;
+    padding: 0.2rem 1rem;
+}
+
+#visualizarProcessoBody .status-pag {
+    font-size: 0.8rem;
+    padding: 0.2rem 1rem;
+}
+
+/* ==================== LINHA VAZIA ==================== */
+.row-empty td {
+    text-align: center;
+    padding: 3rem !important;
+    color: var(--text-faint);
+    font-style: italic;
+}
+.row-empty i {
+    margin-right: 0.5rem;
+}
+
+/* ==================== BOTÃO SALVAR DESABILITADO ==================== */
+.btn-salvar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ==================== ANIMAÇÃO DE CARREGAMENTO ==================== */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* ==================== ABAS (TABS) ==================== */
+.tabs-container {
+    background: var(--card-bg);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    padding: 0.25rem;
+}
+
+.tabs {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.tab-btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+}
+
+.tab-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+}
+
+.tab-btn.active {
+    background: var(--navy-900);
+    color: white;
+    box-shadow: 0 2px 8px rgba(16, 22, 58, 0.15);
+}
+
+.tab-btn .badge-tab {
+    background: var(--bg);
+    color: var(--text-muted);
+    padding: 0.1rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.tab-btn.active .badge-tab {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.tab-content {
+    animation: fadeUp 0.3s ease;
+}
+
+/* Status dropdown */
+.status-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.status-select {
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.2s ease;
+    min-width: 110px;
+}
+
+.status-select:hover {
+    border-color: var(--gold-500);
+}
+
+.status-select:focus {
+    outline: none;
+    border-color: var(--gold-500);
+    box-shadow: 0 0 0 3px rgba(201, 162, 76, 0.1);
+}
+
+/* Estilos para status específicos no select */
+.status-select option[value="EM ANDAMENTO"] { color: var(--info); }
+.status-select option[value="FINALIZADO"] { color: var(--success); }
+.status-select option[value="SUSPENSO"] { color: var(--warning); }
+.status-select option[value="EM ANALISE"] { color: var(--warning); }
+.status-select option[value="ANALISAR"] { color: var(--danger); }
+
+/* ==================== RESPONSIVO ==================== */
+@media (max-width: 1024px) {
+    .stats-grid-mini {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .page-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .search-box {
+        min-width: 100%;
+        width: 100%;
+    }
+    
+    .stats-grid-mini {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filtros-rapidos {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+    
+    .acoes {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .table-container {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        min-width: 1100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid-mini {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .filtro-btn {
+        font-size: 0.78rem;
+        padding: 0.4rem 0.8rem;
+    }
+}

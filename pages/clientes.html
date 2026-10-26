@@ -1,0 +1,392 @@
+<!-- ==================== CLIENTES ==================== -->
+<div class="page-header">
+    <p class="eyebrow">Módulo</p>
+    <h1>Clientes</h1>
+    <div class="page-actions">
+        <button class="btn-secondary" id="btnAtualizarDados" type="button"
+                title="Recalcular rendimentos e contagem de processos">
+            <i class="fas fa-sync-alt"></i> Atualizar dados
+        </button>
+        <button class="btn-primary" id="btnNovoCliente" type="button">
+            <i class="fas fa-plus"></i> Novo cliente
+        </button>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="buscaCliente" placeholder="Buscar por nome, CPF, cidade, contato...">
+        </div>
+    </div>
+</div>
+
+<!-- Cards de estatísticas -->
+<div class="stats-grid-mini">
+    <div class="stat-card-mini">
+        <i class="fas fa-users"></i>
+        <div><h4>Total</h4><span id="totalClientes">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-user-check"></i>
+        <div><h4>Ativos</h4><span id="clientesAtivos">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-user-clock"></i>
+        <div><h4>Inativos</h4><span id="clientesInativos">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-venus-mars"></i>
+        <div><h4>Masc / Fem</h4><span id="clientesSexo">0/0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-building"></i>
+        <div><h4>PF / PJ</h4><span id="clientesTipo">0/0</span></div>
+    </div>
+</div>
+
+<!-- ==================== ABAS ==================== -->
+<div class="tabs-container" style="margin-bottom: var(--space-4);">
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="ativos" type="button" onclick="trocarAbaClientes('ativos')">
+            <i class="fas fa-users"></i> Ativos
+            <span class="badge-tab" id="badgeClientesAtivos">0</span>
+        </button>
+        <button class="tab-btn" data-tab="removidos" type="button" onclick="trocarAbaClientes('removidos')">
+            <i class="fas fa-trash-alt" style="color: var(--danger);"></i> Excluídos
+            <span class="badge-tab" id="badgeClientesRemovidos">0</span>
+        </button>
+    </div>
+</div>
+
+<!-- ==================== ABA ATIVOS ==================== -->
+<div class="tab-content" id="tabClientesAtivos">
+    <div class="filtros-rapidos">
+        <button class="filtro-btn active" data-filtro="todos" type="button">Todos</button>
+        <button class="filtro-btn" data-filtro="ATIVO" type="button">Ativos</button>
+        <button class="filtro-btn" data-filtro="INATIVO" type="button">Inativos</button>
+        <button class="filtro-btn" data-filtro="PF" type="button">Pessoa Física</button>
+        <button class="filtro-btn" data-filtro="PJ" type="button">Pessoa Jurídica</button>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Todos os clientes</h2>
+            <span class="text-muted" id="contagemClientes">0 registros</span>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr id="tabelaHeaderClientes">
+                        <th>Nome</th>
+                        <th>Contato</th>
+                        <th>CPF</th>
+                        <th>Cidade</th>
+                        <th>Idade</th>
+                        <th>Tipo</th>
+                        <th>Sexo</th>
+                        <th>Processos</th>
+                        <th>Status</th>
+                        <th>Data Entrada</th>
+                        <th id="colunaRendimentos" class="col-rendimento" hidden>Rendimentos</th>
+                        <th>Observações</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyClientes">
+                    <tr class="row-empty">
+                        <td colspan="12">
+                            <i class="fas fa-spinner fa-pulse"></i> Carregando clientes...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== ABA REMOVIDOS ==================== -->
+<div class="tab-content" id="tabClientesRemovidos" style="display: none;">
+    <div class="filtros-rapidos">
+        <button class="filtro-btn active" data-filtro="todos" type="button">Todos</button>
+        <button class="filtro-btn" data-filtro="ATIVO" type="button">Ativos</button>
+        <button class="filtro-btn" data-filtro="INATIVO" type="button">Inativos</button>
+        <button class="filtro-btn" data-filtro="PF" type="button">Pessoa Física</button>
+        <button class="filtro-btn" data-filtro="PJ" type="button">Pessoa Jurídica</button>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-trash-alt" style="color: var(--danger);"></i> Clientes excluídos</h2>
+            <span class="text-muted" id="contagemClientesRemovidos">0 registros</span>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Contato</th>
+                        <th>CPF</th>
+                        <th>Cidade</th>
+                        <th>Idade</th>
+                        <th>Tipo</th>
+                        <th>Sexo</th>
+                        <th>Processos</th>
+                        <th>Status</th>
+                        <th>Data Entrada</th>
+                        <th id="colunaRendimentosRemovidos" class="col-rendimento" hidden>Rendimentos</th>
+                        <th>Observações</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyClientesRemovidos">
+                    <tr class="row-empty">
+                        <td colspan="12">
+                            <i class="fas fa-spinner fa-pulse"></i> Carregando clientes excluídos...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MODAL CADASTRO / EDIÇÃO ==================== -->
+<div class="modal-overlay" id="modalCliente">
+    <div class="modal modal-cliente-form">
+        <div class="modal-header">
+            <h2 id="modalTituloCliente">Novo Cliente</h2>
+            <button class="modal-close" id="fecharModalCliente" type="button" onclick="fecharModalCliente()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="formCliente" onsubmit="return false;">
+                <input type="hidden" id="clienteRow" value="">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Nome completo *</label>
+                        <input type="text" id="clienteNome" required placeholder="Nome do cliente">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contato *</label>
+                        <input type="text" id="clienteContato" required placeholder="(00) 00000-0000">
+                    </div>
+
+                    <div class="form-group">
+                        <label>CPF/CNPJ</label>
+                        <input type="text" id="clienteCPF" placeholder="000.000.000-00" maxlength="18">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Cidade</label>
+                        <input type="text" id="clienteCidade" placeholder="Cidade">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Data de Nascimento</label>
+                        <input type="date" id="clienteDataNascimento">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tipo de Cliente</label>
+                        <select id="clienteTipo">
+                            <option value="PF">Pessoa Física (PF)</option>
+                            <option value="PJ">Pessoa Jurídica (PJ)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sexo</label>
+                        <select id="clienteSexo">
+                            <option value="MASCULINO">Masculino</option>
+                            <option value="FEMININO">Feminino</option>
+                            <option value="OUTRO">Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="clienteStatus">
+                            <option value="ATIVO">Ativo</option>
+                            <option value="INATIVO">Inativo</option>
+                            <option value="PENDENTE">Pendente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Data de Entrada</label>
+                        <input type="date" id="clienteDataEntrada">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nº Processos</label>
+                        <input type="number" id="clienteNProcessos" value="0" min="0" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Senha GOV</label>
+                        <input type="text" id="clienteSenhaGov" placeholder="Senha gov.br">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Observações</label>
+                        <textarea id="clienteObs" rows="3" placeholder="Observações sobre o cliente..."></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="cancelarCliente" type="button" onclick="fecharModalCliente()">Cancelar</button>
+            <button class="btn-salvar" id="salvarCliente" type="button">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MODAL VISUALIZAR — CLIENTE ATIVO ==================== -->
+<div class="modal-overlay" id="modalVisualizarCliente">
+    <div class="modal modal-cliente-view">
+        <div class="modal-header">
+            <h2><i class="fas fa-user-circle"></i> Detalhes do Cliente</h2>
+            <button class="modal-close" id="fecharModalVisualizar" type="button"
+                    onclick="fecharModalVisualizar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="cliente-view-header">
+                <div class="cliente-view-avatar"><i class="fas fa-user"></i></div>
+                <div class="cliente-view-ident">
+                    <h3 id="viewClienteNome">—</h3>
+                    <div class="cliente-view-badges">
+                        <span class="status" id="viewClienteStatus">—</span>
+                        <span class="badge-tipo" id="viewClienteTipo">PF</span>
+                    </div>
+                </div>
+            </div>
+
+            <section class="cliente-view-section">
+                <h4 class="cliente-view-section-title"><i class="fas fa-id-card"></i> Dados Pessoais</h4>
+                <div class="cliente-view-grid">
+                    <div class="detalhe-item"><label>Contato</label><p id="viewClienteContato">—</p></div>
+                    <div class="detalhe-item"><label>CPF / CNPJ</label><p id="viewClienteCpf" class="mono-text">—</p></div>
+                    <div class="detalhe-item"><label>Cidade</label><p id="viewClienteCidade">—</p></div>
+                    <div class="detalhe-item"><label>Idade</label><p id="viewClienteIdade">—</p></div>
+                    <div class="detalhe-item"><label>Sexo</label><p id="viewClienteSexo">—</p></div>
+                    <div class="detalhe-item"><label>Data de Entrada</label><p id="viewClienteDataEntrada" class="mono-text">—</p></div>
+                </div>
+            </section>
+
+            <section class="cliente-view-section">
+                <h4 class="cliente-view-section-title"><i class="fas fa-gavel"></i> Dados Processuais</h4>
+                <div class="cliente-view-grid">
+                    <div class="detalhe-item"><label>Nº de Processos</label><p id="viewClienteNProcessos">0</p></div>
+                    <div class="detalhe-item detalhe-item-success" id="viewClienteRendimentoBox" hidden>
+                        <label>Rendimento (soma dos processos)</label>
+                        <p id="viewClienteRendimento">R$ 0,00</p>
+                        <small id="viewClienteRendimentoInfo" class="text-muted"></small>
+                    </div>
+                </div>
+                <div class="cliente-view-processos" id="viewClienteProcessosBox" hidden>
+                    <label class="cliente-view-processos-label">
+                        Processos vinculados
+                        <span id="viewClienteProcessosCount" class="badge-count">0</span>
+                    </label>
+                    <div class="cliente-view-processos-lista" id="viewClienteProcessosLista"></div>
+                </div>
+            </section>
+
+            <section class="cliente-view-section" id="viewClienteSenhaGovBox" hidden>
+                <h4 class="cliente-view-section-title"><i class="fas fa-key"></i> Acesso</h4>
+                <div class="cliente-view-grid">
+                    <div class="detalhe-item full">
+                        <label>Senha GOV</label>
+                        <p id="viewClienteSenhaGov" class="mono-text">—</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cliente-view-section" id="viewClienteObsBox" hidden>
+                <h4 class="cliente-view-section-title"><i class="fas fa-sticky-note"></i> Observações</h4>
+                <div class="detalhe-item full"><p id="viewClienteObs">—</p></div>
+            </section>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn-cancelar" id="fecharModalVisualizarBtn"
+                    onclick="fecharModalVisualizar()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MODAL VISUALIZAR — CLIENTE EXCLUÍDO ==================== -->
+<div class="modal-overlay" id="modalVisualizarClienteRemovido">
+    <div class="modal modal-cliente-view modal-cliente-excluido">
+        <div class="modal-header modal-header-danger">
+            <h2><i class="fas fa-user-slash"></i> Cliente Excluído</h2>
+            <button class="modal-close" id="fecharModalVisualizarRemovido" type="button"
+                    onclick="fecharModalVisualizarRemovido()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="cliente-view-header cliente-view-header-danger">
+                <div class="cliente-view-avatar cliente-view-avatar-danger">
+                    <i class="fas fa-user-slash"></i>
+                </div>
+                <div class="cliente-view-ident">
+                    <h3 id="viewRemovidoNome">—</h3>
+                    <div class="cliente-view-badges">
+                        <span class="status" id="viewRemovidoStatus">—</span>
+                        <span class="badge-tipo" id="viewRemovidoTipo">PF</span>
+                        <span class="badge-excluido"><i class="fas fa-trash-alt"></i> EXCLUÍDO</span>
+                    </div>
+                </div>
+            </div>
+
+            <section class="cliente-view-section">
+                <h4 class="cliente-view-section-title"><i class="fas fa-id-card"></i> Dados Pessoais</h4>
+                <div class="cliente-view-grid">
+                    <div class="detalhe-item"><label>Contato</label><p id="viewRemovidoContato">—</p></div>
+                    <div class="detalhe-item"><label>CPF / CNPJ</label><p id="viewRemovidoCpf" class="mono-text">—</p></div>
+                    <div class="detalhe-item"><label>Cidade</label><p id="viewRemovidoCidade">—</p></div>
+                    <div class="detalhe-item"><label>Idade</label><p id="viewRemovidoIdade">—</p></div>
+                    <div class="detalhe-item"><label>Sexo</label><p id="viewRemovidoSexo">—</p></div>
+                    <div class="detalhe-item"><label>Data de Entrada</label><p id="viewRemovidoDataEntrada" class="mono-text">—</p></div>
+                </div>
+            </section>
+
+            <section class="cliente-view-section">
+                <h4 class="cliente-view-section-title"><i class="fas fa-gavel"></i> Dados Processuais</h4>
+                <div class="cliente-view-grid">
+                    <div class="detalhe-item"><label>Nº de Processos</label><p id="viewRemovidoNProcessos">0</p></div>
+                    <div class="detalhe-item-success detalhe-item" id="viewRemovidoRendimentoBox" hidden>
+                        <label>Rendimento</label>
+                        <p id="viewRemovidoRendimento">R$ 0,00</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cliente-view-section" id="viewRemovidoSenhaGovBox" hidden>
+                <h4 class="cliente-view-section-title"><i class="fas fa-key"></i> Acesso</h4>
+                <div class="cliente-view-grid">
+                    <div class="detalhe-item full">
+                        <label>Senha GOV</label>
+                        <p id="viewRemovidoSenhaGov" class="mono-text">—</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cliente-view-section" id="viewRemovidoObsBox" hidden>
+                <h4 class="cliente-view-section-title"><i class="fas fa-sticky-note"></i> Observações</h4>
+                <div class="detalhe-item full"><p id="viewRemovidoObs">—</p></div>
+            </section>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn-cancelar" id="fecharModalVisualizarRemovidoBtn"
+                    onclick="fecharModalVisualizarRemovido()">Fechar</button>
+        </div>
+    </div>
+</div>

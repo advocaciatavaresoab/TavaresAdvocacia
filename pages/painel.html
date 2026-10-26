@@ -1,0 +1,138 @@
+<!-- ==================== PAINEL / DASHBOARD ==================== -->
+<div class="page-header">
+    <p class="eyebrow">Visão geral</p>
+    <h1 class="titleLogo">Tavares Advocacia</h1>
+    <p style="color: var(--text-muted); margin-top: 0.3rem;" id="dataAtual"></p>
+</div>
+<!-- Atividades pendentes -->
+<div class="card" style="margin-top: var(--space-4);">
+    <div class="card-header">
+        <h2><i class="fas fa-chart-bar" style="color: var(--gold-500);"></i> Atividades do escritório</h2>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span class="badge-prazo badge-hoje" title="Em análise" id="countEmAnalise">0</span>
+            <span class="badge-prazo badge-vencido" title="Corrigir" id="countCorrigir">0</span>
+            <a href="#" class="btn-link" data-page="atividades">Ver todas</a>
+        </div>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Processo</th>
+                    <th>Tipo de Prazo</th>
+                    <th>Prazo</th>
+                    <th>Responsável</th>
+                    <th>Status</th>
+                    <th>Situação</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaAtividadesPendentes">
+                <tr class="row-empty">
+                    <td colspan="7">
+                        <i class="fas fa-spinner fa-pulse"></i> Carregando atividades...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Agenda rápida -->
+<div class="agenda-overview">
+    <div class="agenda-overview-header">
+        <div>
+            <h2><i class="fas fa-calendar-day" style="color: var(--gold-500);"></i> Agenda rápida</h2>
+            <p class="agenda-overview-sub" id="dataAtual"></p>
+        </div>
+    </div>
+
+    <div class="agenda-overview-grid">
+        <div class="agenda-col">
+            <div class="agenda-col-header">
+                <span class="agenda-col-title">📅 Hoje</span>
+                <span class="badge-prazo badge-hoje" id="countHojeTotal">0</span>
+            </div>
+            <div class="agenda-list" id="agendaHojeList">
+                <p class="agenda-empty"><i class="fas fa-spinner fa-pulse"></i> Carregando...</p>
+            </div>
+        </div>
+
+        <div class="agenda-col">
+            <div class="agenda-col-header">
+                <span class="agenda-col-title">📅 Próximos eventos</span>
+                <span class="badge-prazo badge-proximo" id="countSemanaTotal">0</span>
+            </div>
+            <div class="agenda-list" id="agendaSemanaList">
+                <p class="agenda-empty"><i class="fas fa-spinner fa-pulse"></i> Carregando...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Grid principal -->
+<div class="dashboard-grid">
+    
+    <!-- Processos urgentes -->
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                <i class="fas fa-gavel" style="color: var(--gold-500); margin-right: 0.5rem;"></i>
+                Processos urgentes
+            </h2>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span class="badge-prazo badge-vencido" title="Vencidos" id="countVencidos">0</span>
+                <span class="badge-prazo badge-hoje" title="Vencem hoje" id="countHoje">0</span>
+                <span class="badge-prazo badge-proximo" title="Próximos 7 dias" id="countProximos">0</span>
+                <a href="#" class="btn-link" data-page="processos">Ver todos</a>
+            </div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Processo</th>
+                        <th>Cliente</th>
+                        <th>Status</th>
+                        <th>Data Final</th>
+                        <th>Sit. Prazo</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaProcessosRecentes">
+                    <tr class="row-empty">
+                        <td colspan="5">
+                            <i class="fas fa-spinner fa-pulse"></i> Carregando processos...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Próximas perícias -->
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                <i class="fas fa-stethoscope" style="color: var(--gold-500); margin-right: 0.5rem;"></i>
+                Próximas perícias
+            </h2>
+            <a href="#" class="btn-link" data-page="pericias">Ver todas</a>
+        </div>
+        <div class="timeline" id="timelinePericias">
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <span class="day">—</span>
+                    <span class="month">—</span>
+                </div>
+                <div class="timeline-content">
+                    <h4>Carregando perícias...</h4>
+                    <p>Aguardando dados da planilha</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<img src="../assets/img/logo_tavares.png" alt="Logo Tavares Advocacia" class="dashboard-logo">
+

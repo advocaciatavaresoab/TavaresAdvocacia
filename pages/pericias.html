@@ -1,0 +1,291 @@
+<!-- ==================== PERÍCIAS ==================== -->
+<div class="page-header">
+    <p class="eyebrow">Módulo</p>
+    <h1>Perícias</h1>
+    <div class="page-actions">
+        <button class="btn-primary" id="btnNovaPericia">
+            <i class="fas fa-plus"></i> Nova perícia
+        </button>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="buscaPericia" placeholder="Buscar por processo, cliente, benefício...">
+        </div>
+    </div>
+</div>
+
+<!-- Cards de estatísticas -->
+<div class="stats-grid-mini">
+    <div class="stat-card-mini">
+        <i class="fas fa-stethoscope"></i>
+        <div><h4>Total</h4><span id="totalPericias">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-calendar-check"></i>
+        <div><h4>Realizadas</h4><span id="periciasRealizadas">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-clock"></i>
+        <div><h4>Agendadas</h4><span id="periciasAgendadas">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-calendar-times"></i>
+        <div><h4>Pendentes</h4><span id="periciasPendentes">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-calendar-xmark"></i>
+        <div><h4>Canceladas</h4><span id="periciasCanceladas">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-gavel"></i>
+        <div><h4>Judiciais</h4><span id="periciasJudiciais">0</span></div>
+    </div>
+</div>
+
+<!-- Filtros rápidos -->
+<div class="filtros-rapidos">
+    <button class="filtro-btn active" data-filtro="todos">Todas</button>
+    <button class="filtro-btn" data-filtro="AGENDADA">Agendadas</button>
+    <button class="filtro-btn" data-filtro="REALIZADA">Realizadas</button>
+    <button class="filtro-btn" data-filtro="PENDENTE">Pendentes</button>
+    <button class="filtro-btn" data-filtro="CANCELADA">Canceladas</button>
+    <button class="filtro-btn" data-filtro="MÉDICA">Médicas</button>
+    <button class="filtro-btn" data-filtro="SOCIAL">Sociais</button>
+</div>
+
+<!-- Tabela de perícias -->
+<div class="card">
+    <div class="card-header">
+        <h2>Todas as perícias</h2>
+        <span class="text-muted" id="contagemPericias">0 registros</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Processo</th>
+                    <th>Cliente</th>
+                    <th>Benefício</th>
+                    <th>Perícia</th>
+                    <th>Data Médica</th>
+                    <th>Data Social</th>
+                    <th>Tipo</th>
+                    <th>Local</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyPericias">
+                <tr class="row-empty">
+                    <td colspan="10">
+                        <i class="fas fa-spinner fa-pulse"></i> Carregando perícias...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Perícia -->
+<div class="modal-overlay" id="modalPericia">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modalTituloPericia">Nova Perícia</h2>
+            <button class="modal-close" id="fecharModalPericia">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="formPericia">
+                <input type="hidden" id="periciaRow" value="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nº Processo *</label>
+                        <input type="text" id="periciaProcesso" list="listaProcessosPericia" 
+                               required placeholder="Digite ou selecione um processo...">
+                        <datalist id="listaProcessosPericia">
+                            <!-- Preenchido pelo JS -->
+                        </datalist>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Cliente *</label>
+                        <input type="text" id="periciaCliente" required 
+                               placeholder="Preenchido automaticamente ao selecionar processo">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tipo de Benefício</label>
+                        <input type="text" id="periciaBeneficio" placeholder="Ex: Auxílio Doença, Aposentadoria...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Perícia</label>
+                        <select id="periciaTipo">
+                            <option value="MÉDICA">Médica</option>
+                            <option value="SOCIAL">Social</option>
+                            <option value="MÉDICA E SOCIAL">Médica e Social</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Data Perícia Médica</label>
+                        <input type="date" id="periciaDataMedica">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Data Perícia Social</label>
+                        <input type="date" id="periciaDataSocial">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tipo de Perícia</label>
+                        <select id="periciaTipoJudicial">
+                            <option value="JUDICIAL">Judicial</option>
+                            <option value="ADMINISTRATIVA">Administrativa</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Local da Perícia</label>
+                        <input type="text" id="periciaLocal" placeholder="Ex: JF Sousa, INSS...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="periciaStatus">
+                            <option value="AGENDADA">Agendada</option>
+                            <option value="REALIZADA">Realizada</option>
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="CANCELADA">Cancelada</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Resultado</label>
+                        <select id="periciaResultado">
+                            <option value="">—</option>
+                            <option value="FAVORÁVEL">Favorável</option>
+                            <option value="DESFAVORÁVEL">Desfavorável</option>
+                            <option value="AGUARDANDO">Aguardando</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Observações</label>
+                        <textarea id="periciaObs" rows="3" placeholder="Observações sobre a perícia..."></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="cancelarPericia">Cancelar</button>
+            <button class="btn-salvar" id="salvarPericia">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Modal Visualizar Perícia -->
+<div class="modal-overlay" id="modalVisualizarPericia">
+    <div class="modal modal-visualizar-pericia">
+        <div class="modal-header">
+            <h2><i class="fas fa-eye"></i> Detalhes da Perícia</h2>
+            <button class="modal-close" id="fecharModalVisualizarPericia">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- Cabeçalho com ícone + tipo + status -->
+            <div class="pericia-perfil-header">
+                <div class="pericia-avatar-grande" id="vizPericiaIcone">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <div class="pericia-info-principal">
+                    <h3 id="vizPericiaProcesso">—</h3>
+                    <p id="vizPericiaCliente" class="pericia-cliente-texto">—</p>
+                    <span id="vizPericiaStatus" class="status active">—</span>
+                </div>
+            </div>
+            
+            <!-- Detalhes em grid -->
+            <div class="pericia-detalhes-grid">
+                <div class="detalhe-item">
+                    <i class="fas fa-file-medical"></i>
+                    <div class="metrica-card-int">
+                        <label>Tipo de Benefício</label>
+                        <span id="vizPericiaBeneficio">—</span>
+                    </div>
+                </div>
+                
+                <div class="detalhe-item">
+                    <i class="fas fa-clipboard-check"></i>
+                    <div class="metrica-card-int">
+                        <label>Tipo de Perícia</label>
+                        <span id="vizPericiaTipo">—</span>
+                    </div>
+                </div>
+                
+                <div class="detalhe-item">
+                    <i class="fas fa-user-md"></i>
+                    <div class="metrica-card-int">
+                        <label>Modalidade</label>
+                        <span id="vizPericiaModalidade">—</span>
+                    </div>
+                </div>
+                
+                <div class="detalhe-item">
+                    <i class="fas fa-gavel"></i>
+                    <div class="metrica-card-int">
+                        <label>Esfera</label>
+                        <span id="vizPericiaEsfera">—</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Datas em destaque -->
+            <div class="pericia-datas-box">
+                <div class="data-card medica" id="vizPericiaDataMedicaBox">
+                    <i class="fas fa-user-md"></i>
+                    <div>
+                        <label>Data Perícia Médica</label>
+                        <span id="vizPericiaDataMedica">—</span>
+                    </div>
+                </div>
+                <div class="data-card social" id="vizPericiaDataSocialBox">
+                    <i class="fas fa-users"></i>
+                    <div>
+                        <label>Data Perícia Social</label>
+                        <span id="vizPericiaDataSocial">—</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Local -->
+            <div class="pericia-local-box">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>
+                    <label>Local da Perícia</label>
+                    <span id="vizPericiaLocal">—</span>
+                </div>
+            </div>
+            
+            <!-- Resultado (só aparece se tiver) -->
+            <div id="vizPericiaResultadoBox" class="pericia-resultado-box" style="display: none;">
+                <label><i class="fas fa-flag-checkered"></i> Resultado</label>
+                <span id="vizPericiaResultado">—</span>
+            </div>
+            
+            <!-- Observações (só aparece se tiver) -->
+            <div id="vizPericiaObsBox" class="pericia-obs-box" style="display: none;">
+                <label><i class="fas fa-align-left"></i> Observações</label>
+                <p id="vizPericiaObs">—</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="btnFecharVisualizarPericia">Fechar</button>
+            <button class="btn-salvar" id="btnEditarDoVisualizarPericia">
+                <i class="fas fa-edit"></i> Editar Perícia
+            </button>
+        </div>
+    </div>
+</div>

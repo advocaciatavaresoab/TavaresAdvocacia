@@ -1,0 +1,315 @@
+<!-- ==================== PROCESSOS ==================== -->
+<div class="page-header">
+    <p class="eyebrow">Módulo</p>
+    <h1>Processos</h1>
+    <div class="page-actions">
+        <button class="btn-primary" id="btnNovoProcesso">
+            <i class="fas fa-plus"></i> Novo processo
+        </button>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="buscaProcesso" placeholder="Buscar por nº processo, cliente, responsável...">
+        </div>
+    </div>
+</div>
+
+<!-- Cards de estatísticas -->
+<div class="stats-grid-mini">
+    <div class="stat-card-mini">
+        <i class="fas fa-gavel"></i>
+        <div><h4>Total</h4><span id="totalProcessos">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-check-circle"></i>
+        <div><h4>Em andamento</h4><span id="processosAndamento">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-clock"></i>
+        <div><h4>Prazos vencidos</h4><span id="prazosVencidos">0</span></div>
+    </div>
+    <div class="stat-card-mini">
+        <i class="fas fa-trophy"></i>
+        <div><h4>Aprovados</h4><span id="processosAprovados">0</span></div>
+    </div>
+</div>
+
+<!-- ==================== ABAS (TABS) ==================== -->
+<div class="tabs-container" style="margin-bottom: var(--space-4);">
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="ativos" onclick="trocarAbaProcessos('ativos')">
+            <i class="fas fa-folder-open"></i> Ativos
+            <span class="badge-tab" id="badgeAtivos">0</span>
+        </button>
+        <button class="tab-btn" data-tab="removidos" onclick="trocarAbaProcessos('removidos')">
+            <i class="fas fa-trash-alt" style="color: var(--danger);"></i> Excluídos
+            <span class="badge-tab" id="badgeRemovidos">0</span>
+        </button>
+    </div>
+</div>
+
+<!-- ==================== CONTEÚDO DAS ABAS ==================== -->
+<div class="tab-content" id="tabAtivos">
+    <!-- Filtros rápidos -->
+    <div class="filtros-rapidos">
+        <button class="filtro-btn active" data-filtro="todos">Todos</button>
+        <button class="filtro-btn" data-filtro="EM ANDAMENTO">Em andamento</button>
+        <button class="filtro-btn" data-filtro="FINALIZADO">Finalizados</button>
+        <button class="filtro-btn" data-filtro="SUSPENSO">Suspensos</button>
+        <button class="filtro-btn" data-filtro="EM ANALISE">Em Análise</button>
+        <button class="filtro-btn" data-filtro="ANALISAR">Analisar</button>
+        <button class="filtro-btn" data-filtro="APROVADO">Aprovados</button>
+        <button class="filtro-btn" data-filtro="NEGADO">Negados</button>
+        <button class="filtro-btn" data-filtro="ARQUIVADO">Arquivados</button>
+    </div>
+
+    <!-- Tabela de processos ativos -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Todos os processos</h2>
+            <span class="text-muted" id="contagemProcessos">0 registros</span>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr id="tabelaHeaderProcessos">
+                        <th>Nº Processo</th>
+                        <th>Tipo</th>
+                        <th style="min-width: 200px;">Cliente</th>
+                        <th>Ação</th>
+                        <th>Local</th>
+                        <th>Responsável</th>
+                        <th>Prazo</th>
+                        <th>Sit. Prazo</th>
+                        <th>Status</th>
+                        <th>Status Pag.</th>
+                        <th>Resultado</th>
+                        <th id="colunaHonorarios" style="display: none;">Honorários</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyProcessos">
+                    <tr class="row-empty">
+                        <td colspan="13">
+                            <i class="fas fa-spinner fa-pulse"></i> Carregando processos...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== CONTEÚDO DA ABA REMOVIDOS ==================== -->
+<div class="tab-content" id="tabRemovidos" style="display: none;">
+    <!-- Filtros rápidos para removidos -->
+    <div class="filtros-rapidos">
+        <button class="filtro-btn active" data-filtro="todos">Todos</button>
+        <button class="filtro-btn" data-filtro="EM ANDAMENTO">Em andamento</button>
+        <button class="filtro-btn" data-filtro="FINALIZADO">Finalizados</button>
+        <button class="filtro-btn" data-filtro="SUSPENSO">Suspensos</button>
+        <button class="filtro-btn" data-filtro="EM ANALISE">Em Análise</button>
+        <button class="filtro-btn" data-filtro="ANALISAR">Analisar</button>
+    </div>
+
+    <!-- Tabela de processos removidos -->
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-trash-alt" style="color: var(--danger);"></i> Processos excluídos</h2>
+            <span class="text-muted" id="contagemProcessosRemovidos">0 registros</span>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nº Processo</th>
+                        <th>Tipo</th>
+                        <th style="min-width: 200px;">Cliente</th>
+                        <th>Ação</th>
+                        <th>Local</th>
+                        <th>Responsável</th>
+                        <th>Prazo</th>
+                        <th>Sit. Prazo</th>
+                        <th>Status</th>
+                        <th>Status Pag.</th>
+                        <th>Resultado</th>
+                        <th>Honorários</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyProcessosRemovidos">
+                    <tr class="row-empty">
+                        <td colspan="13">
+                            <i class="fas fa-spinner fa-pulse"></i> Carregando processos excluídos...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Processo -->
+<div class="modal-overlay" id="modalProcesso">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modalTituloProcesso">Novo Processo</h2>
+            <button class="modal-close" id="fecharModalProcesso">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="formProcesso">
+                <input type="hidden" id="processoRow" value="">
+                <div class="form-grid">
+                    <!-- Tipo de Processo -->
+                    <div class="form-group">
+                        <label>Tipo de Processo</label>
+                        <select id="processoTipo">
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Cliente -->
+                    <div class="form-group full-width">
+                        <label>Cliente *</label>
+                        <select id="processoCliente" required>
+                            <option value="">Selecione um cliente...</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Nº Processo -->
+                    <div class="form-group">
+                        <label>Nº Processo *</label>
+                        <input type="text" id="processoNumero" required placeholder="0000000-00.0000.0.00.0000">
+                    </div>
+                    
+                    <!-- Tipo de Prazo -->
+                    <div class="form-group">
+                        <label>Tipo de Prazo</label>
+                        <select id="processoTipoPrazo">
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Data da Intimação -->
+                    <div class="form-group">
+                        <label>Data da Intimação</label>
+                        <input type="date" id="processoDataIntimacao">
+                    </div>
+                    
+                    <!-- Prazo (dias) -->
+                    <div class="form-group">
+                        <label>Prazo (dias)</label>
+                        <input type="number" id="processoPrazoDias" placeholder="15" min="0" value="15">
+                    </div>
+                    
+                    <!-- Responsável -->
+                    <div class="form-group">
+                        <label>Responsável</label>
+                        <select id="processoResponsavel">
+                            <option value="">Selecione...</option>
+                            <option value="LARISSA">Larissa</option>
+                            <option value="IZAAC">Izaac</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Tipo de Ação -->
+                    <div class="form-group">
+                        <label>Tipo de Ação</label>
+                        <select id="processoTipoAcao">
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Local do Processo -->
+                    <div class="form-group">
+                        <label>Local do Processo</label>
+                        <select id="processoLocal">
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Honorários -->
+                    <div class="form-group">
+                        <label>Honorários</label>
+                        <input type="text" id="processoHonorarios" placeholder="R$ 0,00">
+                    </div>
+                    
+                    <!-- Retroativo -->
+                    <div class="form-group">
+                        <label>Retroativo</label>
+                        <input type="text" id="processoRetroativo" placeholder="R$ 0,00">
+                    </div>
+                    
+                    <!-- Valor de Acordo -->
+                    <div class="form-group">
+                        <label>Valor de Acordo</label>
+                        <input type="text" id="processoValorAcordo" placeholder="R$ 0,00">
+                    </div>
+                    
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="processoStatus">
+                            <option value="EM ANDAMENTO">Em Andamento</option>
+                            <option value="FINALIZADO">Finalizado</option>
+                            <option value="SUSPENSO">Suspenso</option>
+                            <option value="EM ANALISE">Em Análise</option>
+                            <option value="ANALISAR">Analisar</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Status de Pagamento -->
+                    <div class="form-group">
+                        <label>Status de Pagamento</label>
+                        <select id="processoStatusPag">
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="PAGO">Pago</option>
+                            <option value="VENCIDO">Vencido</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Resultado -->
+                    <div class="form-group">
+                        <label>Resultado</label>
+                        <select id="processoResultado">
+                            <option value="APROVADO">Aprovado</option>
+                            <option value="NEGADO">Negado</option>
+                            <option value="PARCIAL">Parcial</option>
+                            <option value="AGUARDANDO">Aguardando</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Pasta (Link) -->
+                    <div class="form-group full-width">
+                        <label>Pasta (Link)</label>
+                        <input type="text" id="processoPasta" placeholder="https://drive.google.com/...">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="cancelarProcesso">Cancelar</button>
+            <button class="btn-salvar" id="salvarProcesso">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Visualizar Processo -->
+<div class="modal-overlay" id="modalVisualizarProcesso">
+    <div class="modal" style="max-width: 600px;">
+        <div class="modal-header">
+            <h2><i class="fas fa-gavel"></i> Detalhes do Processo</h2>
+            <button class="modal-close" id="fecharModalVisualizarProcesso">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body" id="visualizarProcessoBody">
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="fecharModalVisualizarProcesso()">Fechar</button>
+        </div>
+    </div>
+</div>

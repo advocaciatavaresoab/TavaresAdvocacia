@@ -1,0 +1,317 @@
+<!-- ==================== FINANCEIRO ==================== -->
+<div class="page-header">
+    <p class="eyebrow">Módulo</p>
+    <h1>Financeiro</h1>
+    <div class="page-actions">
+        <button class="btn-primary" id="btnNovaTransacao">
+            <i class="fas fa-plus"></i> Nova transação
+        </button>
+        <button class="btn-parceiro" id="btnParcelasParceiro">
+            <i class="fas fa-handshake"></i> Parcelas Parceiro
+        </button>
+        <button class="btn-gerar-processos" id="btnGerarProcessos">
+            <i class="fas fa-sync"></i> Gerar dos processos
+        </button>
+        <button class="btn-recalcular" id="btnRecalcularStatus">
+            <i class="fas fa-calculator"></i> Recalcular status
+        </button>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="buscaFinanceiro" placeholder="Buscar transação...">
+        </div>
+    </div>
+</div>
+
+<!-- ==================== RESULTADOS RÁPIDOS ==================== -->
+<div class="stats-grid-mini">
+    <div class="stat-card-mini destaque-positivo">
+        <i class="fas fa-arrow-down" style="color: var(--success);"></i>
+        <div><h4>Recebidos</h4><span id="totalRecebidos">R$ 0,00</span></div>
+    </div>
+    <div class="stat-card-mini destaque-negativo">
+        <i class="fas fa-clock" style="color: var(--warning);"></i>
+        <div><h4>A Receber</h4><span id="totalAReceber">R$ 0,00</span></div>
+    </div>
+    <div class="stat-card-mini destaque-negativo">
+        <i class="fas fa-arrow-up" style="color: var(--danger);"></i>
+        <div><h4>Despesas</h4><span id="totalDespesas">R$ 0,00</span></div>
+    </div>
+    <div class="stat-card-mini destaque-saldo">
+        <i class="fas fa-wallet" style="color: var(--info);"></i>
+        <div><h4>Saldo</h4><span id="saldoGeral">R$ 0,00</span></div>
+    </div>
+    <div class="stat-card-mini destaque-comissao">
+        <i class="fas fa-handshake" style="color: #8b5cf6;"></i>
+        <div><h4>Comissões</h4><span id="totalComissoes">R$ 0,00</span></div>
+    </div>
+    <div class="stat-card-mini destaque-comissao">
+        <i class="fas fa-handshake" style="color: #8b5cf6;"></i>
+        <div><h4>Comissão Paga</h4><span id="totalComissaoPaga">R$ 0,00</span></div>
+    </div>
+    <div class="stat-card-mini destaque-positivo">
+        <i class="fas fa-calendar-alt" style="color: var(--gold-500);"></i>
+        <div><h4>Faturamento Mês</h4><span id="faturamentoMes">R$ 0,00</span></div>
+    </div>
+</div>
+
+<!-- ==================== FILTROS ==================== -->
+<div class="filtros-rapidos">
+    <button class="filtro-btn active" data-filtro="todos">Todos</button>
+    <button class="filtro-btn" data-filtro="ENTRADA">Entradas</button>
+    <button class="filtro-btn" data-filtro="SAÍDA">Saídas</button>
+    <button class="filtro-btn" data-filtro="COMISSÃO">Comissões</button>
+    <button class="filtro-btn" data-filtro="PROCESSO" style="border-color: var(--success); color: var(--success);">
+        <i class="fas fa-gavel"></i> Processo
+    </button>
+    <button class="filtro-btn" data-filtro="PARCEIRO" style="border-color: #8b5cf6; color: #8b5cf6;">
+        <i class="fas fa-handshake"></i> Parceiro
+    </button>
+    
+    <div style="display: flex; gap: 0.5rem; margin-left: auto; align-items: center;">
+        <label style="font-size: 0.85rem; color: var(--text-muted);">Mês:</label>
+        <select id="filtroMesFinanceiro" style="padding: 0.4rem 0.8rem; border: 1px solid var(--border); border-radius: 8px; background: white; font-family: var(--font-body);">
+            <option value="todos">Todos</option>
+            <option value="0">Janeiro</option>
+            <option value="1">Fevereiro</option>
+            <option value="2">Março</option>
+            <option value="3">Abril</option>
+            <option value="4">Maio</option>
+            <option value="5">Junho</option>
+            <option value="6">Julho</option>
+            <option value="7">Agosto</option>
+            <option value="8">Setembro</option>
+            <option value="9">Outubro</option>
+            <option value="10">Novembro</option>
+            <option value="11">Dezembro</option>
+        </select>
+    </div>
+</div>
+
+<!-- ==================== TABELA ==================== -->
+<div class="card">
+    <div class="card-header">
+        <h2>Transações</h2>
+        <span class="text-muted" id="contagemFinanceiro">0 transações</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Fluxo</th>
+                    <th style="min-width: 150px;">Cliente</th>
+                    <th>Categoria</th>
+                    <th>Valor</th>
+                    <th>Parcelas</th>
+                    <th>Status</th>
+                    <th>Processo</th>
+                    <th>Comprovante</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyFinanceiro">
+                <tr class="row-empty">
+                    <td colspan="10">
+                        <i class="fas fa-spinner fa-pulse"></i> Carregando transações...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ==================== GRÁFICO ANUAL ==================== -->
+<div class="card" style="margin-top: var(--space-4);">
+    <div class="card-header">
+        <h2>📊 Resumo Anual</h2>
+        <span class="text-muted">Entradas vs Saídas</span>
+    </div>
+    <div class="grafico-barras" id="graficoAnual"></div>
+</div>
+
+<!-- ==================== MODAL TRANSAÇÃO ==================== -->
+<div class="modal-overlay" id="modalFinanceiro">
+    <div class="modal" style="max-width: 700px;">
+        <div class="modal-header">
+            <h2 id="modalTituloFinanceiro">Nova Transação</h2>
+            <button class="modal-close" id="fecharModalFinanceiro">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="formFinanceiro">
+                <input type="hidden" id="financeiroRow" value="">
+                <div class="form-grid">
+                    <!-- FLUXO -->
+                    <div class="form-group">
+                        <label>Fluxo *</label>
+                        <select id="financeiroFluxo" required>
+                            <option value="ENTRADA">Entrada</option>
+                            <option value="SAÍDA">Saída</option>
+                            <option value="COMISSÃO">Comissão</option>
+                        </select>
+                    </div>
+                    
+                    <!-- CATEGORIA -->
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="financeiroCategoria">
+                            <option value="HONORÁRIOS">Honorários</option>
+                            <option value="ACORDO">Acordo</option>
+                            <option value="RETROATIVO">Retroativo</option>
+                            <option value="COMISSÃO PARCEIRO">Comissão Parceiro</option>
+                            <option value="CUSTAS">Custas Processuais</option>
+                            <option value="TAXAS">Taxas</option>
+                            <option value="MATERIAL">Material</option>
+                            <option value="OUTROS">Outros</option>
+                        </select>
+                    </div>
+                    
+                    <!-- TIPO_PAG -->
+                    <div class="form-group">
+                        <label>Tipo Pagamento</label>
+                        <select id="financeiroTipoPag">
+                            <option value="">Selecione...</option>
+                            <option value="PIX">PIX</option>
+                            <option value="TRANSFERÊNCIA">Transferência</option>
+                            <option value="DINHEIRO">Dinheiro</option>
+                            <option value="BOLETO">Boleto</option>
+                            <option value="CARTÃO">Cartão</option>
+                        </select>
+                    </div>
+                    
+                    <!-- DATA -->
+                    <div class="form-group">
+                        <label>Data *</label>
+                        <input type="date" id="financeiroData" required>
+                    </div>
+                    
+                    <!-- CLIENTE -->
+                    <div class="form-group full-width">
+                        <label>Cliente</label>
+                        <input type="text" id="financeiroCliente" placeholder="Nome do cliente">
+                    </div>
+                    
+                    <!-- PROCESSO VINCULADO -->
+                    <div class="form-group full-width">
+                        <label>Processo vinculado</label>
+                        <select id="financeiroProcesso">
+                            <option value="">Nenhum</option>
+                        </select>
+                        <small style="color: var(--text-muted); font-size: 0.75rem;">
+                            Selecione um processo para preencher automaticamente os dados
+                        </small>
+                    </div>
+                    
+                    <!-- VALOR -->
+                    <div class="form-group">
+                        <label>Valor *</label>
+                        <input type="text" id="financeiroValor" required placeholder="R$ 0,00">
+                    </div>
+                    
+                    <!-- N_PARCELAS -->
+                    <div class="form-group">
+                        <label>Nº Parcelas</label>
+                        <input type="text" id="financeiroParcelas" placeholder="Ex: 1/10, 2/10">
+                    </div>
+                    
+                    <!-- STATUS -->
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="financeiroStatus">
+                            <option value="PAGO">Pago</option>
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="AGUARDANDO">Aguardando</option>
+                            <option value="DEVOLVIDO">Devolvido</option>
+                            <option value="CANCELADO">Cancelado</option>
+                        </select>
+                    </div>
+                    
+                    <!-- COMPROVANTE -->
+                    <div class="form-group full-width">
+                        <label>Link Comprovante</label>
+                        <input type="text" id="financeiroComprovante" placeholder="https://drive.google.com/...">
+                    </div>
+                    
+                    <!-- OBS -->
+                    <div class="form-group full-width">
+                        <label>Observações</label>
+                        <textarea id="financeiroObs" rows="2" placeholder="Observações..."></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="cancelarFinanceiro">Cancelar</button>
+            <button class="btn-salvar" id="salvarFinanceiro">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MODAL PARCELAS PARCEIRO ==================== -->
+<div class="modal-overlay" id="modalParcelasParceiro">
+    <div class="modal" style="max-width: 750px;">
+        <div class="modal-header">
+            <h2><i class="fas fa-handshake" style="color: #8b5cf6;"></i> Receita Parcelada - Parceiro</h2>
+            <button class="modal-close" id="fecharModalParcelas">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="formParcelas">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Nome do Parceiro *</label>
+                        <input type="text" id="parcelaParceiro" required placeholder="Nome do parceiro">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Descrição *</label>
+                        <input type="text" id="parcelaDescricao" required placeholder="Ex: Comissão - Projeto X">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Valor Total *</label>
+                        <input type="text" id="parcelaValorTotal" required placeholder="R$ 0,00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Número de Parcelas *</label>
+                        <input type="number" id="parcelaNumero" required min="1" max="24" value="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tipo Pagamento</label>
+                        <select id="parcelaTipoPag">
+                            <option value="">Selecione...</option>
+                            <option value="PIX">PIX</option>
+                            <option value="TRANSFERÊNCIA">Transferência</option>
+                            <option value="DINHEIRO">Dinheiro</option>
+                            <option value="BOLETO">Boleto</option>
+                            <option value="CARTÃO">Cartão</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Processo vinculado (opcional)</label>
+                        <select id="parcelaProcesso">
+                            <option value="">Nenhum</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width" id="containerParcelas">
+                        <!-- Gerado dinamicamente -->
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="cancelarParcelas">Cancelar</button>
+            <button class="btn-salvar" id="salvarParcelas">
+                <i class="fas fa-save"></i> Salvar parcelas
+            </button>
+        </div>
+    </div>
+</div>

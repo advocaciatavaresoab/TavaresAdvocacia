@@ -1,0 +1,236 @@
+<!-- ==================== RELATÓRIOS ==================== -->
+<div class="page-header">
+    <p class="eyebrow">Módulo</p>
+    <h1>Relatórios</h1>
+    <div class="page-actions">
+        <button class="btn-primary" id="btnGerarRelatorio">
+            <i class="fas fa-file-pdf"></i> Gerar relatório
+        </button>
+        <button class="btn-secondary" id="btnExportarExcel">
+            <i class="fas fa-file-excel"></i> Exportar Excel
+        </button>
+    </div>
+</div>
+
+<!-- Grid de cards de relatórios -->
+<div class="relatorios-grid">
+    
+    <!-- Relatório de Processos -->
+    <div class="card relatorio-card">
+        <div class="card-header">
+            <h2><i class="fas fa-gavel" style="color: var(--gold-500);"></i> Processos</h2>
+        </div>
+        <div class="relatorio-body">
+            <div class="relatorio-stat">
+                <span class="relatorio-numero" id="relTotalProcessos">0</span>
+                <span class="relatorio-label">Total de processos</span>
+            </div>
+            <div class="relatorio-barras">
+                <div class="relatorio-barra">
+                    <span>Em andamento</span>
+                    <div class="barra-container">
+                        <div class="barra-preenchida azul" id="barraAndamento" style="width: 0%;"></div>
+                    </div>
+                    <span class="barra-valor" id="percAndamento">0%</span>
+                </div>
+                <div class="relatorio-barra">
+                    <span>Aprovados</span>
+                    <div class="barra-container">
+                        <div class="barra-preenchida verde" id="barraAprovados" style="width: 0%;"></div>
+                    </div>
+                    <span class="barra-valor" id="percAprovados">0%</span>
+                </div>
+                <div class="relatorio-barra">
+                    <span>Negados</span>
+                    <div class="barra-container">
+                        <div class="barra-preenchida vermelha" id="barraNegados" style="width: 0%;"></div>
+                    </div>
+                    <span class="barra-valor" id="percNegados">0%</span>
+                </div>
+                <div class="relatorio-barra">
+                    <span>Arquivados</span>
+                    <div class="barra-container">
+                        <div class="barra-preenchida cinza" id="barraArquivados" style="width: 0%;"></div>
+                    </div>
+                    <span class="barra-valor" id="percArquivados">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Relatório de Clientes -->
+    <div class="card relatorio-card">
+        <div class="card-header">
+            <h2><i class="fas fa-users" style="color: var(--info);"></i> Clientes</h2>
+        </div>
+        <div class="relatorio-body">
+            <div class="relatorio-stat">
+                <span class="relatorio-numero" id="relTotalClientes">0</span>
+                <span class="relatorio-label">Total de clientes</span>
+            </div>
+            <div class="relatorio-mini-grid">
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-user-check" style="color: var(--success);"></i>
+                    <span class="mini-numero" id="relClientesAtivos">0</span>
+                    <span class="mini-label">Ativos</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-user-clock" style="color: var(--danger);"></i>
+                    <span class="mini-numero" id="relClientesInativos">0</span>
+                    <span class="mini-label">Inativos</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-venus-mars" style="color: var(--warning);"></i>
+                    <span class="mini-numero" id="relClientesMasculinos">0</span>
+                    <span class="mini-label">Masculino</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-venus" style="color: #ec4899;"></i>
+                    <span class="mini-numero" id="relClientesFemininos">0</span>
+                    <span class="mini-label">Feminino</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Relatório Financeiro -->
+    <div class="card relatorio-card">
+        <div class="card-header">
+            <h2><i class="fas fa-sack-dollar" style="color: var(--success);"></i> Financeiro</h2>
+        </div>
+        <div class="relatorio-body">
+            <div class="relatorio-stat destaque">
+                <span class="relatorio-numero" id="relFaturamentoTotal">R$ 0,00</span>
+                <span class="relatorio-label">Faturamento total</span>
+            </div>
+            <div class="relatorio-mini-grid">
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-arrow-up" style="color: var(--success);"></i>
+                    <span class="mini-numero" id="relRecebimentos">R$ 0,00</span>
+                    <span class="mini-label">Recebimentos</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-arrow-down" style="color: var(--danger);"></i>
+                    <span class="mini-numero" id="relDespesas">R$ 0,00</span>
+                    <span class="mini-label">Despesas</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-handshake" style="color: #8b5cf6;"></i>
+                    <span class="mini-numero" id="relComissoes">R$ 0,00</span>
+                    <span class="mini-label">Comissões</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-chart-line" style="color: var(--info);"></i>
+                    <span class="mini-numero" id="relTicketMedio">R$ 0,00</span>
+                    <span class="mini-label">Média por Cliente</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Relatório de Perícias -->
+    <div class="card relatorio-card">
+        <div class="card-header">
+            <h2><i class="fas fa-stethoscope" style="color: var(--warning);"></i> Perícias</h2>
+        </div>
+        <div class="relatorio-body">
+            <div class="relatorio-stat">
+                <span class="relatorio-numero" id="relTotalPericias">0</span>
+                <span class="relatorio-label">Total de perícias</span>
+            </div>
+            <div class="relatorio-mini-grid">
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-calendar-check" style="color: var(--success);"></i>
+                    <span class="mini-numero" id="relPericiasRealizadas">0</span>
+                    <span class="mini-label">Realizadas</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-clock" style="color: var(--info);"></i>
+                    <span class="mini-numero" id="relPericiasAgendadas">0</span>
+                    <span class="mini-label">Agendadas</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-calendar-times" style="color: var(--danger);"></i>
+                    <span class="mini-numero" id="relPericiasCanceladas">0</span>
+                    <span class="mini-label">Canceladas</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                    <span class="mini-numero" id="relPericiasFavoraveis">0</span>
+                    <span class="mini-label">Favoráveis</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Relatório de Prazos -->
+    <div class="card relatorio-card">
+        <div class="card-header">
+            <h2><i class="fas fa-hourglass-half" style="color: var(--danger);"></i> Prazos</h2>
+        </div>
+        <div class="relatorio-body">
+            <div class="relatorio-stat">
+                <span class="relatorio-numero" id="relPrazosVencidos">0</span>
+                <span class="relatorio-label">Prazos vencidos</span>
+            </div>
+            <div class="relatorio-mini-grid">
+                <div class="relatorio-mini-item alerta">
+                    <i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>
+                    <span class="mini-numero" id="relPrazosUrgentes">0</span>
+                    <span class="mini-label">Vencem em 7 dias</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                    <span class="mini-numero" id="relPrazosOk">0</span>
+                    <span class="mini-label">Em dia</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-clock" style="color: var(--warning);"></i>
+                    <span class="mini-numero" id="relPrazosProximos">0</span>
+                    <span class="mini-label">Próximos 30 dias</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-calendar" style="color: var(--info);"></i>
+                    <span class="mini-numero" id="relPrazosSemData">0</span>
+                    <span class="mini-label">Sem data</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Relatório de Parceiros -->
+    <div class="card relatorio-card">
+        <div class="card-header">
+            <h2><i class="fa-solid fa-handshake" style="color: #8b5cf6;"></i> Parceiros</h2>
+        </div>
+        <div class="relatorio-body">
+            <div class="relatorio-stat">
+                <span class="relatorio-numero" id="relTotalParceiros">0</span>
+                <span class="relatorio-label">Total de parceiros</span>
+            </div>
+            <div class="relatorio-mini-grid">
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-star" style="color: #c98a1f;"></i>
+                    <span class="mini-numero" id="relParceirosDestaque">0</span>
+                    <span class="mini-label">Destaques</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-user-check" style="color: var(--success);"></i>
+                    <span class="mini-numero" id="relParceirosAtivos">0</span>
+                    <span class="mini-label">Ativos</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-percent" style="color: var(--info);"></i>
+                    <span class="mini-numero" id="relComissaoMedia">0%</span>
+                    <span class="mini-label">Comissão média</span>
+                </div>
+                <div class="relatorio-mini-item">
+                    <i class="fas fa-trophy" style="color: var(--gold-500);"></i>
+                    <span class="mini-numero" id="relTopParceiro">—</span>
+                    <span class="mini-label">Top parceiro</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,99 @@
+/* Filtros rápidos */
+.filtros-rapidos .filtro-btn {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filtros-rapidos .filtro-btn:hover {
+    background: var(--gold-50);
+    border-color: var(--gold-300);
+    color: var(--gold-700);
+}
+
+.filtros-rapidos .filtro-btn.active {
+    background: var(--gold-500);
+    border-color: var(--gold-500);
+    color: white;
+}
+
+/* Badge tipo de prazo */
+.badge-tipo-prazo {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    background: var(--gold-100);
+    color: var(--gold-700);
+    border: 1px solid var(--gold-200);
+}
+
+/* Status específicos para atividades */
+.status.pending {
+    background: var(--warning-100);
+    color: var(--warning-700);
+    border-color: var(--warning-300);
+}
+
+.status.urgent {
+    background: var(--danger-100);
+    color: var(--danger-700);
+    border-color: var(--danger-300);
+}
+
+.status.completed {
+    background: var(--success-100);
+    color: var(--success-700);
+    border-color: var(--success-300);
+}
+
+.status.active {
+    background: var(--info-100);
+    color: var(--info-700);
+    border-color: var(--info-300);
+}
+
+/* Data do prazo na tabela */
+.data-prazo.tipo-vencido {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.data-prazo.tipo-hoje {
+    color: var(--warning);
+    font-weight: 600;
+}
+
+.data-prazo.tipo-proximo {
+    color: var(--gold-600);
+    font-weight: 500;
+}
+
+/* Ações na tabela */
+.table-container .btn-icon {
+    padding: 0.25rem 0.5rem;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+}
+
+.table-container .btn-icon:hover {
+    background: var(--bg-hover);
+}
+
+.table-container .btn-icon[onclick*="excluir"]:hover {
+    background: var(--danger-50);
+    color: var(--danger);
+}

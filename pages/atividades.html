@@ -1,0 +1,147 @@
+<!-- ==================== ATIVIDADES ==================== -->
+<div class="page-header">
+    <p class="eyebrow">Módulo</p>
+    <h1>Controle de Atividades</h1>
+    <div class="page-actions">
+        <button class="btn-primary" id="btnNovaAtividade">
+            <i class="fas fa-plus"></i> Nova atividade
+        </button>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="buscaAtividades" placeholder="Buscar atividades...">
+        </div>
+    </div>
+</div>
+
+<!-- Filtros rápidos -->
+<div class="filtros-rapidos" style="display: flex; gap: 0.5rem; margin-bottom: var(--space-4); flex-wrap: wrap;">
+    <button class="filtro-btn active" data-filtro="todos">Todos</button>
+    <button class="filtro-btn" data-filtro="CORRIGIR">Corrigir</button>
+    <button class="filtro-btn" data-filtro="EM ANÁLISE">Em análise</button>
+    <button class="filtro-btn" data-filtro="CONFERIDO">Conferido</button>
+    <button class="filtro-btn" data-filtro="AGUARDANDO">Aguardando</button>
+    <button class="filtro-btn" data-filtro="PROTOCOLADO">Protocolado</button>
+</div>
+
+<!-- Tabela de atividades -->
+<div class="card">
+    <div class="card-header">
+        <h2><i class="fas fa-tasks" style="color: var(--gold-500);"></i> Atividades</h2>
+        <span class="text-muted" id="contagemAtividades">0 atividades</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Processo</th>
+                    <th>Prazo</th>
+                    <th>Tipo de Prazo</th>
+                    <th>Responsável</th>
+                    <th>Status</th>
+                    <th>Situação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyAtividades">
+                <tr class="row-empty">
+                    <td colspan="8">
+                        <i class="fas fa-spinner fa-pulse"></i> Carregando atividades...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Atividade -->
+<div class="modal-overlay" id="modalAtividade">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modalTituloAtividade">Nova Atividade</h2>
+            <button class="modal-close" id="fecharModalAtividade">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="formAtividade">
+                <input type="hidden" id="atividadeRow" value="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Cliente *</label>
+                        <select id="atividadeCliente" required>
+                            <option value="">Selecione um cliente...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Processo *</label>
+                        <select id="atividadeProcesso" required disabled>
+                            <option value="">Selecione um cliente primeiro...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Prazo *</label>
+                        <input type="date" id="atividadePrazo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tipo de Prazo *</label>
+                        <select id="atividadeTipoPrazo" required>
+                            <option value="">Selecione...</option>
+                            <option value="RECURSO">Recurso</option>
+                            <option value="CONTESTAÇÃO">Contestação</option>
+                            <option value="IMPUGNAÇÃO">Impugnação</option>
+                            <option value="MANIFESTAÇÃO">Manifestação</option>
+                            <option value="INICIAL">Inicial</option>
+                            <option value="PROTOCOLAR">Protocolizar</option>
+                            <option value="EMBARGOS">Embargos</option>
+                            <option value="PRORROGAÇÃO">Prorrogação</option>
+                            <option value="EXIGÊNCIA INSS">Exigência INSS</option>
+                            <option value="MARCA PERÍCIA">MARCA PERÍCIA</option>
+                            <option value="CONTRARRAZÕES">CONTRARRAZÕES</option>
+                            <option value="ALEGAÇÕES FINAIS">ALEGAÇÕES FINAIS</option>
+                            <option value="EMENDA Á INICIAL">EMENDA Á INICIAL</option>
+                            <option value="INFORMAR ENDEREÇO">INFORMAR ENDEREÇO</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Responsável *</label>
+                        <select id="atividadeResponsavel" required>
+                            <option value="">Selecione...</option>
+                            <option value="LARISSA">Larissa</option>
+                            <option value="IZAAC">Izaac</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status *</label>
+                        <select id="atividadeStatus" required>
+                            <option value="">Selecione...</option>
+                            <option value="CORRIGIR">Corrigir</option>
+                            <option value="EM ANÁLISE">Em análise</option>
+                            <option value="CONFERIDO">Conferido</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Situação *</label>
+                        <select id="atividadeSituacao" required>
+                            <option value="">Selecione...</option>
+                            <option value="AGUARDANDO">Aguardando</option>
+                            <option value="PROTOCOLADO">Protocolado</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="cancelarAtividade">Cancelar</button>
+            <button class="btn-salvar" id="salvarAtividade">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+        </div>
+    </div>
+</div>

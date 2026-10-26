@@ -1,0 +1,452 @@
+<!-- ==================== FINANCEIRO ==================== -->
+<div id="pageFinanceiro">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Módulo</p>
+            <h1>Financeiro</h1>
+        </div>
+        <div class="page-actions">
+            <button class="btn-primary" id="btnNovaTransacao">
+                <i class="fas fa-plus"></i> Nova Transação
+            </button>
+            <button class="btn-primary" id="btnSincronizarFinanceiro">
+                <i class="fas fa-sync"></i> Sincronizar com Processos
+            </button>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="buscaFinanceiro" placeholder="Buscar por cliente, processo, parceiro...">
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de estatísticas Financeiro -->
+    <div class="stats-grid-mini">
+        <div class="stat-card-mini">
+            <i class="fas fa-arrow-up" style="color: var(--success);"></i>
+            <div>
+                <h4>Total Entradas</h4>
+                <span id="totalEntradas">R$ 0,00</span>
+            </div>
+        </div>
+        <div class="stat-card-mini">
+            <i class="fas fa-arrow-down" style="color: var(--danger);"></i>
+            <div>
+                <h4>Total Saídas</h4>
+                <span id="totalSaidas">R$ 0,00</span>
+            </div>
+        </div>
+        <div class="stat-card-mini">
+            <i class="fas fa-balance-scale" style="color: var(--info);"></i>
+            <div>
+                <h4>Saldo</h4>
+                <span id="totalSaldo">R$ 0,00</span>
+            </div>
+        </div>
+        <div class="stat-card-mini">
+            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+            <div>
+                <h4>Recebido</h4>
+                <span id="totalRecebido">R$ 0,00</span>
+            </div>
+        </div>
+        <div class="stat-card-mini">
+            <i class="fas fa-clock" style="color: var(--warning);"></i>
+            <div>
+                <h4>Pendente</h4>
+                <span id="totalPendente">R$ 0,00</span>
+            </div>
+        </div>
+        <div class="stat-card-mini">
+            <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
+            <div>
+                <h4>Vencido</h4>
+                <span id="totalVencido">R$ 0,00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== RESUMO ANUAL ==================== -->
+    <div class="resumo-anual-container">
+        <div class="resumo-header">
+            <h2><i class="fas fa-chart-line"></i> 📊 Resumo Anual</h2>
+            <div class="resumo-controles">
+                <select id="anoResumo" class="select-ano"></select>
+                <button class="btn-primary btn-sm" id="btnAtualizarResumo">
+                    <i class="fas fa-sync"></i> Atualizar
+                </button>
+            </div>
+        </div>
+        
+        <div class="resumo-grid">
+            <div class="resumo-card">
+                <div class="resumo-card-icon" style="background: #d4edda; color: #28a745;">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="resumo-card-info">
+                    <span class="resumo-card-label">Entradas no Ano</span>
+                    <span class="resumo-card-value" id="entradasAno">R$ 0,00</span>
+                </div>
+            </div>
+            <div class="resumo-card">
+                <div class="resumo-card-icon" style="background: #f8d7da; color: #dc3545;">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="resumo-card-info">
+                    <span class="resumo-card-label">Saídas no Ano</span>
+                    <span class="resumo-card-value" id="saidasAno">R$ 0,00</span>
+                </div>
+            </div>
+            <div class="resumo-card">
+                <div class="resumo-card-icon" style="background: #d4edda; color: #28a745;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="resumo-card-info">
+                    <span class="resumo-card-label">Total Recebido</span>
+                    <span class="resumo-card-value" id="totalRecebidoAno">R$ 0,00</span>
+                </div>
+            </div>
+            <div class="resumo-card">
+                <div class="resumo-card-icon" style="background: #fff3cd; color: #ffc107;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="resumo-card-info">
+                    <span class="resumo-card-label">Total Pendente</span>
+                    <span class="resumo-card-value" id="totalPendenteAno">R$ 0,00</span>
+                </div>
+            </div>
+            <div class="resumo-card">
+                <div class="resumo-card-icon" style="background: #f8d7da; color: #dc3545;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="resumo-card-info">
+                    <span class="resumo-card-label">Total Vencido</span>
+                    <span class="resumo-card-value" id="totalVencidoAno">R$ 0,00</span>
+                </div>
+            </div>
+            <div class="resumo-card">
+                <div class="resumo-card-icon" style="background: #d1ecf1; color: #17a2b8;">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="resumo-card-info">
+                    <span class="resumo-card-label">Média Mensal</span>
+                    <span class="resumo-card-value" id="mediaMensalAno">R$ 0,00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grafico-container">
+            <h3>📈 Evolução Mensal (Entradas x Saídas)</h3>
+            <div class="grafico-barras" id="graficoMensal">
+                <div class="grafico-vazio">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Carregando dados...</span>
+                </div>
+            </div>
+            <div class="grafico-legenda">
+                <span class="legenda-item">
+                    <span class="legenda-cor" style="background: #28a745;"></span>
+                    Entradas
+                </span>
+                <span class="legenda-item">
+                    <span class="legenda-cor" style="background: #dc3545;"></span>
+                    Saídas
+                </span>
+            </div>
+        </div>
+        
+        <div class="tabela-resumo-container">
+            <h3>📋 Resumo por Mês</h3>
+            <div class="table-container">
+                <table class="tabela-resumo-mensal">
+                    <thead>
+                        <tr>
+                            <th>Mês</th>
+                            <th>Entradas</th>
+                            <th>Saídas</th>
+                            <th>Saldo</th>
+                            <th>Pendente</th>
+                            <th>Vencido</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyResumoMensal">
+                        <tr class="row-empty">
+                            <td colspan="7">Nenhum dado disponível</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros rápidos -->
+    <div class="filtros-rapidos">
+        <button class="filtro-btn-financeiro active" data-filtro="todos">Todos</button>
+        <button class="filtro-btn-financeiro" data-filtro="ENTRADA">📈 Entradas</button>
+        <button class="filtro-btn-financeiro" data-filtro="SAIDA">📉 Saídas</button>
+        <button class="filtro-btn-financeiro" data-filtro="PENDENTE">Pendentes</button>
+        <button class="filtro-btn-financeiro" data-filtro="PAGO">Pagos</button>
+        <button class="filtro-btn-financeiro" data-filtro="VENCIDO">Vencidos</button>
+        <button class="filtro-btn-financeiro" data-filtro="DEVOLVIDO">Devolvidos</button>
+        <button class="filtro-btn-financeiro" data-filtro="AGUARDANDO">Aguardando</button>
+        <button class="filtro-btn-financeiro" data-filtro="HONORARIOS">Honorários</button>
+        <button class="filtro-btn-financeiro" data-filtro="RETROATIVO">Retroativo</button>
+        <button class="filtro-btn-financeiro" data-filtro="ACORDO">Acordo</button>
+        <button class="filtro-btn-financeiro" data-filtro="COMISSAO">Comissão</button>
+    </div>
+
+    <!-- Tabela Financeiro -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Lançamentos Financeiros</h2>
+            <span class="text-muted" id="contagemFinanceiro">0 registros</span>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Data Pag.</th>
+                        <th>Fluxo</th>
+                        <th>Categoria</th>
+                        <th>Parceiro</th>
+                        <th>Tipo Pag.</th>
+                        <th>Cliente</th>
+                        <th style="min-width: 150px;">Processo Ref.</th>
+                        <th>Valor</th>
+                        <th>N° Parcelas</th>
+                        <th>Comprovante</th>
+                        <th>Status</th>
+                        <th>Obs</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyFinanceiro">
+                    <tr class="row-empty">
+                        <td colspan="14">
+                            <i class="fas fa-spinner fa-pulse"></i> Carregando lançamentos...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Lançamento -->
+<div class="modal-overlay" id="modalEditarFinanceiro">
+    <div class="modal" style="max-width: 650px;">
+        <div class="modal-header">
+            <h2 id="modalTituloFinanceiro">Editar Lançamento</h2>
+            <button class="modal-close" id="fecharModalFinanceiro">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="formEditarFinanceiro">
+                <input type="hidden" id="financeiroRow" value="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Data</label>
+                        <input type="date" id="editFinanceiroData">
+                    </div>
+                    <div class="form-group">
+                        <label>Data Pagamento</label>
+                        <input type="date" id="editFinanceiroDataPagamento">
+                    </div>
+                    <div class="form-group">
+                        <label>Fluxo</label>
+                        <select id="editFinanceiroFluxo">
+                            <option value="ENTRADA">Entrada</option>
+                            <option value="SAIDA">Saída</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="editFinanceiroCategoria">
+                            <option value="HONORARIOS">Honorários</option>
+                            <option value="ACORDO">Acordo</option>
+                            <option value="RETROATIVO">Retroativo</option>
+                            <option value="COMISSAO PARCEIRO">Comissão Parceiro</option>
+                            <option value="CUSTAS">Custas</option>
+                            <option value="TAXAS">Taxas</option>
+                            <option value="MATERIAL">Material</option>
+                            <option value="OUTROS">Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Parceiro</label>
+                        <input type="text" id="editFinanceiroParceiro" list="listaParceirosEdit" placeholder="Selecione ou digite...">
+                        <datalist id="listaParceirosEdit"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Pagamento</label>
+                        <select id="editFinanceiroTipoPag">
+                            <option value="">Selecione...</option>
+                            <option value="PIX">PIX</option>
+                            <option value="TRANSFERENCIA">Transferência</option>
+                            <option value="DINHEIRO">Dinheiro</option>
+                            <option value="BOLETO">Boleto</option>
+                            <option value="CARTAO">Cartão</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <input type="text" id="editFinanceiroCliente" placeholder="Nome do cliente">
+                    </div>
+                    <div class="form-group">
+                        <label>Processo Ref.</label>
+                        <input type="text" id="editFinanceiroProcessoRef" placeholder="Nº do processo">
+                    </div>
+                    <div class="form-group">
+                        <label>Valor</label>
+                        <input type="text" id="editFinanceiroValor" placeholder="R$ 0,00">
+                    </div>
+                    <div class="form-group">
+                        <label>N° Parcelas</label>
+                        <input type="text" id="editFinanceiroNParcelas" placeholder="1 ou 1/4">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="editFinanceiroStatus">
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="PAGO">Pago</option>
+                            <option value="VENCIDO">Vencido</option>
+                            <option value="DEVOLVIDO">Devolvido</option>
+                            <option value="AGUARDANDO">Aguardando</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Observação</label>
+                        <input type="text" id="editFinanceiroObs" placeholder="Observações...">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Comprovante (Link)</label>
+                        <input type="text" id="editFinanceiroComprovante" placeholder="https://drive.google.com/...">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="cancelarFinanceiro">Cancelar</button>
+            <button class="btn-danger" id="btnExcluirFinanceiro" style="background: var(--danger); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                <i class="fas fa-trash"></i> Excluir
+            </button>
+            <button class="btn-salvar" id="salvarFinanceiro">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nova Transação -->
+<div class="modal-overlay" id="modalNovaTransacao">
+    <div class="modal" style="max-width: 750px;">
+        <div class="modal-header">
+            <h2 id="modalTituloNovaTransacao">
+                <i class="fas fa-plus-circle"></i> Nova Transação Financeira
+            </h2>
+            <button class="modal-close" id="fecharModalNovaTransacao">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="formNovaTransacao">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Data *</label>
+                        <input type="date" id="novaTransacaoData" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fluxo *</label>
+                        <select id="novaTransacaoFluxo" required>
+                            <option value="ENTRADA">Entrada</option>
+                            <option value="SAIDA">Saída</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria *</label>
+                        <select id="novaTransacaoCategoria" required>
+                            <option value="">Selecione...</option>
+                            <option value="HONORARIOS">Honorários</option>
+                            <option value="ACORDO">Acordo</option>
+                            <option value="RETROATIVO">Retroativo</option>
+                            <option value="COMISSAO PARCEIRO">Comissão Parceiro</option>
+                            <option value="CUSTAS">Custas</option>
+                            <option value="TAXAS">Taxas</option>
+                            <option value="MATERIAL">Material</option>
+                            <option value="OUTROS">Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Parceiro</label>
+                        <input type="text" id="novaTransacaoParceiro" list="listaParceiros" placeholder="Selecione ou digite...">
+                        <datalist id="listaParceiros"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Pagamento</label>
+                        <select id="novaTransacaoTipoPag">
+                            <option value="">Selecione...</option>
+                            <option value="PIX">PIX</option>
+                            <option value="TRANSFERENCIA">Transferência</option>
+                            <option value="DINHEIRO">Dinheiro</option>
+                            <option value="BOLETO">Boleto</option>
+                            <option value="CARTAO">Cartão</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <input type="text" id="novaTransacaoCliente" placeholder="Nome do cliente" >
+                    </div>
+                    <div class="form-group">
+                        <label>Processo Ref.</label>
+                        <input type="text" id="novaTransacaoProcessoRef" placeholder="Nº do processo">
+                    </div>
+                    <div class="form-group">
+                        <label>Valor Total *</label>
+                        <input type="text" id="novaTransacaoValor" placeholder="R$ 0,00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>N° Parcelas *</label>
+                        <input type="number" id="novaTransacaoNParcelas" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status *</label>
+                        <select id="novaTransacaoStatus" required>
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="PAGO">Pago</option>
+                            <option value="DEVOLVIDO">Devolvido</option>
+                            <option value="AGUARDANDO">Aguardando</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Data Pagamento (1ª parcela)</label>
+                        <input type="date" id="novaTransacaoDataPagamento">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Comprovante (Link)</label>
+                        <input type="text" id="novaTransacaoComprovante" placeholder="https://drive.google.com/...">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Observação</label>
+                        <input type="text" id="novaTransacaoObs" placeholder="Observações...">
+                    </div>
+                </div>
+
+                <!-- Preview das parcelas -->
+                <div id="previewParcelas" class="preview-parcelas" style="display: none;">
+                    <strong class="preview-titulo">
+                        <i class="fas fa-list"></i> Prévia das parcelas
+                    </strong>
+                    <div id="previewParcelasConteudo" class="preview-conteudo"></div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="cancelarNovaTransacao">Cancelar</button>
+            <button class="btn-salvar" id="salvarNovaTransacao">
+                <i class="fas fa-save"></i> Salvar Transação
+            </button>
+        </div>
+    </div>
+</div>

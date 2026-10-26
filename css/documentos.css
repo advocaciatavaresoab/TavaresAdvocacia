@@ -1,0 +1,238 @@
+
+/* ==================== STATS ==================== */
+.stats-grid-mini {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+}
+
+.stat-card-mini {
+    background: var(--card-bg);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card-mini:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card-mini i {
+    font-size: 1.3rem;
+    color: var(--gold-500);
+    width: 30px;
+    text-align: center;
+}
+
+.stat-card-mini div h4 {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.stat-card-mini div span {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--navy-950);
+}
+
+/* ==================== PASTAS GRID (HORIZONTAL) ==================== */
+.pastas-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    min-height: 100px;
+    align-items: flex-start;
+}
+
+.pasta-card {
+    min-width: 120px;
+    max-width: 180px;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    border: 2px solid transparent;
+    background: var(--bg);
+    flex: 0 0 auto;
+}
+
+.pasta-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--bg-hover);
+}
+
+.pasta-card i {
+    font-size: 2.5rem;
+}
+
+.pasta-card span {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+    word-break: break-word;
+    line-height: 1.2;
+}
+
+.pasta-card .pasta-badge {
+    font-size: 0.5rem;
+    margin-top: 0.1rem;
+}
+
+.pasta-card .pasta-sub {
+    font-size: 0.55rem;
+    opacity: 0.7;
+    font-weight: 400;
+}
+
+.pasta-card.pasta-add {
+    border: 2px dashed var(--border);
+    color: var(--text-faint);
+    opacity: 0.7;
+    background: transparent;
+    min-width: 100px;
+}
+
+.pasta-card.pasta-add:hover {
+    border-color: var(--gold-500);
+    color: var(--gold-600);
+    opacity: 1;
+    background: var(--gold-50);
+}
+
+.pasta-card.pasta-drive {
+    border-left: 4px solid #fbbf24;
+}
+
+.pasta-card.pasta-drive i {
+    color: #fbbf24;
+}
+
+/* ==================== CORES PASTAS ==================== */
+.cores-pasta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.3rem;
+}
+
+.cor-pasta {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.cor-pasta:hover {
+    transform: scale(1.15);
+}
+
+.cor-pasta.selected {
+    border-color: var(--navy-950);
+    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--navy-950);
+}
+
+/* ==================== RESPONSIVO ==================== */
+@media (max-width: 1024px) {
+    .stats-grid-mini {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header .page-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .page-header .page-actions .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .search-box {
+        min-width: 100%;
+        width: 100%;
+    }
+    
+    .stats-grid-mini {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .pasta-card {
+        min-width: 100px;
+        max-width: 150px;
+        padding: var(--space-1) var(--space-2);
+    }
+    
+    .pasta-card i {
+        font-size: 1.8rem;
+    }
+    
+    .pasta-card span {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid-mini {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-1);
+    }
+    
+    .stat-card-mini {
+        padding: var(--space-1) var(--space-2);
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .stat-card-mini i {
+        font-size: 1rem;
+        width: auto;
+    }
+    
+    .stat-card-mini div h4 {
+        font-size: 0.5rem;
+    }
+    
+    .stat-card-mini div span {
+        font-size: 0.8rem;
+    }
+    
+    .pastas-grid {
+        gap: var(--space-2);
+        padding: var(--space-2);
+    }
+    
+    .pasta-card {
+        min-width: 80px;
+        max-width: 120px;
+        padding: 0.3rem 0.5rem;
+    }
+    
+    .pasta-card i {
+        font-size: 1.5rem;
+    }
+    
+    .pasta-card span {
+        font-size: 0.6rem;
+    }
+}

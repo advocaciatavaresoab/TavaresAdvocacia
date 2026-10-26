@@ -1,0 +1,305 @@
+<!-- ==================== AGENDA ==================== -->
+<div class="page-header">
+    <p class="eyebrow">Módulo</p>
+    <h1>Agenda</h1>
+    <div class="page-actions">
+        <button class="btn-primary" id="btnNovoEvento">
+            <i class="fas fa-plus"></i> Novo evento
+        </button>
+        <button class="btn-secondary" id="btnHoje">
+            <i class="fas fa-calendar-day"></i> Hoje
+        </button>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="buscaAgenda" placeholder="Buscar eventos...">
+        </div>
+    </div>
+</div>
+
+<!-- Navegação do calendário -->
+<div class="calendario-nav">
+    <button class="btn-icon" id="btnMesAnterior" title="Mês anterior">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <h2 id="tituloMesAno">Agosto 2026</h2>
+    <button class="btn-icon" id="btnMesProximo" title="Próximo mês">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <div class="filtros-rapidos" style="margin-left: auto;">
+        <button class="filtro-btn active" data-filtro="todos">Todos</button>
+        <button class="filtro-btn" data-filtro="AUDIÊNCIA">Audiências</button>
+        <button class="filtro-btn" data-filtro="PERÍCIA">Perícias</button>
+        <button class="filtro-btn" data-filtro="PRAZO">Prazos</button>
+        <button class="filtro-btn" data-filtro="REUNIÃO">Reuniões</button>
+    </div>
+</div>
+
+<!-- Grid do calendário + próximos eventos -->
+<div class="agenda-grid">
+    
+    <!-- Calendário mensal -->
+    <div class="card calendario-card">
+        <div class="card-header">
+            <h2>Calendário</h2>
+        </div>
+        <div class="calendario">
+            <div class="calendario-dias-semana">
+                <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+            </div>
+            <div class="calendario-dias" id="calendarioDias">
+                <!-- Preenchido pelo JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Próximos eventos -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Próximos eventos</h2>
+            <span class="text-muted" id="contagemEventos">0 eventos</span>
+        </div>
+        <div class="timeline" id="timelineEventos">
+            <div class="timeline-item">
+                <div class="timeline-date">
+                    <span class="day">—</span>
+                    <span class="month">—</span>
+                </div>
+                <div class="timeline-content">
+                    <h4>Carregando agenda...</h4>
+                    <p>Aguardando dados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Eventos do dia selecionado -->
+<div class="card" style="margin-top: var(--space-4);">
+    <div class="card-header">
+        <h2 id="tituloEventosDia">Eventos do dia</h2>
+        <span class="text-muted">Selecione uma data no calendário</span>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Horário</th>
+                    <th>Tipo</th>
+                    <th>Processo</th>
+                    <th>Cliente</th>
+                    <th>Descrição</th>
+                    <th>Local</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyEventosDia">
+                <tr class="row-empty">
+                    <td colspan="7">
+                        <i class="fas fa-hand-pointer"></i> Clique em uma data para ver os eventos
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Evento -->
+<div class="modal-overlay" id="modalEvento">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modalTituloEvento">Novo Evento</h2>
+            <button class="modal-close" id="fecharModalEvento">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="formEvento">
+                <input type="hidden" id="eventoRow" value="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tipo de Evento *</label>
+                        <select id="eventoTipo" required>
+                            <option value="AUDIÊNCIA">Audiência</option>
+                            <option value="PERÍCIA">Perícia</option>
+                            <option value="PRAZO">Prazo</option>
+                            <option value="REUNIÃO">Reunião</option>
+                            <option value="OUTRO">Outro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Data *</label>
+                        <input type="date" id="eventoData" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Nº Processo</label>
+                        <input type="text" id="eventoProcesso" list="listaProcessosAgenda" 
+                               placeholder="Digite ou selecione um processo...">
+                        <datalist id="listaProcessosAgenda">
+                            <!-- Preenchido pelo JS -->
+                        </datalist>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Cliente/Parte</label>
+                        <input type="text" id="eventoCliente" 
+                               placeholder="Preenchido automaticamente ao selecionar processo">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Horário</label>
+                        <input type="time" id="eventoHorario">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Duração</label>
+                        <select id="eventoDuracao">
+                            <option value="30">30 minutos</option>
+                            <option value="60" selected>1 hora</option>
+                            <option value="90">1h30</option>
+                            <option value="120">2 horas</option>
+                            <option value="180">3 horas</option>
+                            <option value="240">4 horas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Local</label>
+                        <input type="text" id="eventoLocal" placeholder="Local do evento">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Responsável</label>
+                        <input type="text" id="eventoResponsavel" placeholder="Nome do responsável">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="eventoStatus">
+                            <option value="AGENDADO">Agendado</option>
+                            <option value="REALIZADO">Realizado</option>
+                            <option value="CANCELADO">Cancelado</option>
+                            <option value="ADIADO">Adiado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Link (videoconferência)</label>
+                        <input type="text" id="eventoLink" placeholder="https://meet.google.com/...">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Descrição / Observações</label>
+                        <textarea id="eventoDescricao" rows="3" placeholder="Detalhes do evento..."></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="cancelarEvento">Cancelar</button>
+            <button class="btn-salvar" id="salvarEvento">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Modal Visualizar Evento -->
+<div class="modal-overlay" id="modalVisualizarEvento">
+    <div class="modal modal-visualizar-evento">
+        <div class="modal-header">
+            <h2><i class="fas fa-eye"></i> Detalhes do Evento</h2>
+            <button class="modal-close" id="fecharModalVisualizarEvento">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- Cabeçalho com tipo + status -->
+            <div class="evento-perfil-header">
+                <div class="evento-avatar-grande" id="vizEventoIcone">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="evento-info-principal">
+                    <h3 id="vizEventoTipo">—</h3>
+                    <p id="vizEventoDataHora" class="evento-data-texto">—</p>
+                    <span id="vizEventoStatus" class="status active">—</span>
+                </div>
+            </div>
+            
+            <!-- Link de videoconferência em destaque -->
+            <div id="vizEventoLinkBox" class="evento-link-box" style="display: none;">
+                <div class="evento-link-header">
+                    <i class="fas fa-video"></i>
+                    <strong>Link da Videoconferência</strong>
+                </div>
+                <div class="evento-link-conteudo">
+                    <input type="text" id="vizEventoLink" readonly>
+                    <button class="btn-copiar-link" onclick="copiarLinkEvento()">
+                        <i class="fas fa-copy"></i> Copiar
+                    </button>
+                    <a id="vizEventoLinkAbrir" href="#" target="_blank" class="btn-abrir-link">
+                        <i class="fas fa-external-link-alt"></i> Abrir
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Detalhes em grid -->
+            <div class="evento-detalhes-grid">
+                <div class="detalhe-item">
+                    <i class="fas fa-user"></i>
+                    <div class="metrica-card-int">
+                        <label>Cliente/Parte</label>
+                        <span id="vizEventoCliente">—</span>
+                    </div>
+                </div>
+                
+                <div class="detalhe-item">
+                    <i class="fas fa-file-contract"></i>
+                    <div class="metrica-card-int">
+                        <label>Nº Processo</label>
+                        <span id="vizEventoProcesso">—</span>
+                    </div>
+                </div>
+                
+                <div class="detalhe-item">
+                    <i class="fas fa-clock"></i>
+                    <div class="metrica-card-int">
+                        <label>Duração</label>
+                        <span id="vizEventoDuracao">—</span>
+                    </div>
+                </div>
+                
+                <div class="detalhe-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="metrica-card-int">
+                        <label>Local</label>
+                        <span id="vizEventoLocal">—</span>
+                    </div>
+                </div>
+                
+                <div class="detalhe-item">
+                    <i class="fas fa-user-tie"></i>
+                    <div class="metrica-card-int">
+                        <label>Responsável</label>
+                        <span id="vizEventoResponsavel">—</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Descrição -->
+            <div id="vizEventoDescricaoBox" class="evento-descricao-box" style="display: none;">
+                <label><i class="fas fa-align-left"></i> Descrição / Observações</label>
+                <p id="vizEventoDescricao">—</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" id="btnFecharVisualizarEvento">Fechar</button>
+            <button class="btn-salvar" id="btnEditarDoVisualizarEvento">
+                <i class="fas fa-edit"></i> Editar Evento
+            </button>
+        </div>
+    </div>
+</div>
