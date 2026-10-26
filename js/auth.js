@@ -1,6 +1,6 @@
 // ==================== CONFIGURAÇÃO ====================
-const GOOGLE_CLIENT_ID = '130807397659-1susepvnn4g0412d5anv1bi09a8qsc22.apps.googleusercontent.com';
-const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 horas em milissegundos
+const GOOGLE_CLIENT_ID = '936205929077-u7q325vogq2l05r4j4bsgiqfrcqgiovs.apps.googleusercontent.com';
+const SESSION_DURATION = 8 * 60 * 60 * 1000; 
 
 // ==================== PERMISSÕES POR ROLE ====================
 const PERMISSOES_POR_ROLE = {
