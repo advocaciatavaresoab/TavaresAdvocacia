@@ -222,9 +222,9 @@ async function realizarBusca(termo) {
         const agenda = await carregarComCache('AGENDA').catch(() => []);
         if (Array.isArray(agenda) && agenda.length) {
             agenda.forEach(e => {
-                const cliente = safeString(e['Cliente/Parte'] || e.CLIENTE || '');
-                const tipo = safeString(e['Tipo de Evento'] || e.TIPO || '');
-                const processo = safeString(e['Nº Processo'] || e['N PROCESSO'] || '');
+                const cliente = safeString(e['CLIENTE/PARTE'] || e.CLIENTE || '');
+                const tipo = safeString(e['TIPO DE EVENTO'] || e.TIPO || '');
+                const processo = safeString(e['N PROCESSO'] || e['Nº Processo'] || '');
                 
                 if (cliente.toLowerCase().includes(termoLower) || 
                     tipo.toLowerCase().includes(termoLower) ||
