@@ -312,26 +312,26 @@ function preencherAgendaRapida(processos, pericias, eventosAgenda) {
     // --- ADICIONA EVENTOS DA AGENDA ---
     if (eventosAgenda && eventosAgenda.length) {
         eventosAgenda.forEach(e => {
-            const data = e.Data || e['DATA EVENTO'] || e['Data'] || e['data'];
+            const data = e.DATA || e.Data || e['DATA EVENTO'] || e['DATA DO EVENTO'] || e.data;
             if (!data) return;
-            
-            const cliente = e['Cliente/Parte'] || e.CLIENTE || e['Cliente'] || 'Cliente não informado';
-            const tipo = e['Tipo de Evento'] || e.TIPO || e['Tipo'] || 'Evento';
-            const processo = e['Nº Processo'] || e['N PROCESSO'] || e['Processo'] || '';
-            const horario = e.Horário || e.HORARIO || e['Horário'] || '';
-            const local = e.Local || e.LOCAL || '';
-            
+
+            const cliente   = e['CLIENTE/PARTE'] || e['Cliente/Parte'] || e.CLIENTE || e.Cliente || 'Cliente não informado';
+            const tipo      = e['TIPO DE EVENTO'] || e['Tipo de Evento'] || e.TIPO || e.Tipo || 'Evento';
+            const processo  = e['N PROCESSO'] || e['Nº Processo'] || e['N PROCESSO'] || e.Processo || '';
+            const horario   = e.HORARIO || e.Horário || e['Horário'] || '';
+            const local     = e.LOCAL || e.Local || '';
+
             const dias = diasRestantes(data);
-            
+
             itens.push({
                 tipo: 'evento',
-                data: data,
-                dias: dias,
+                data,
+                dias,
                 titulo: cliente,
                 subtitulo: `${tipo}${processo ? ' · ' + processo : ''}`,
-                horario: horario,
-                local: local,
-                status: e.Status || e.STATUS || 'AGENDADO',
+                horario,
+                local,
+                status: e.STATUS || e.Status || 'AGENDADO',
                 origem: '📅 AGENDA'
             });
         });
