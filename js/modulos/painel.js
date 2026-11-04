@@ -252,7 +252,7 @@ function preencherAtividadesPendentes(atividades) {
 
     tbody.innerHTML = exibir.map(a => {
         const statusClass = a.STATUS === 'EM ANÁLISE' ? 'pending' : 'urgent';
-        const situacaoClass = a.SITUAÇÃO === 'AGUARDANDO' ? 'pending' : 'completed';
+        const situacaoClass = a.SITUACAO === 'AGUARDANDO' ? 'pending' : 'completed';
         const prazoClass = getPrazoClass(a.PRAZO);
 
         return `
@@ -263,7 +263,7 @@ function preencherAtividadesPendentes(atividades) {
                 <td><span class="data-prazo ${prazoClass}">${formatarData(a.PRAZO)}</span></td>
                 <td>${esc(a.RESPONSAVEL)}</td>
                 <td><span class="status ${statusClass}">${esc(a.STATUS)}</span></td>
-                <td><span class="status ${situacaoClass}">${esc(a.SITUAÇÃO)}</span></td>
+                <td><span class="status ${situacaoClass}">${esc(a.SITUACAO)}</span></td>
             </tr>
         `;
     }).join('');
@@ -480,7 +480,7 @@ function preencherTabelaProcessosUrgentes(processos) {
             else if (dias <= 7) countProximos++;
         }
 
-        const statusPrazo = p['SITUAÇÃO DO PRAZO'] || '';
+        const statusPrazo = p['SITUACAO DO PRAZO'] || '';
         const prazoClass = statusPrazo.includes('VENCIDO') ? 'urgent' :
                           statusPrazo.includes('PRÓXIMO') ? 'pending' : 'active';
 
