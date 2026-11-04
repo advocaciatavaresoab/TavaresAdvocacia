@@ -293,7 +293,7 @@ async function carregarClientes() {
         todosClientes = dados
             .filter(c => c.NOME && String(c.NOME).trim())
             .map(c => {
-                const dn = c['Data de Nascimento'];
+                const dn = c['DATA DE NASCIMENTO'];
                 if (dn) c.IDADE_CALCULADA = calcularIdade(dn);
 
                 if (titular) {
@@ -323,7 +323,7 @@ async function carregarClientesRemovidos() {
         todosClientesRemovidos = dados
             .filter(c => c.NOME && String(c.NOME).trim())
             .map(c => {
-                const dn = c['Data de Nascimento'];
+                const dn = c['DATA DE NASCIMENTO'];
                 if (dn) c.IDADE_CALCULADA = calcularIdade(dn);
                 if (!titular) delete c[CAMPO_RENDIMENTO];
                 return c;
@@ -585,7 +585,7 @@ function verDetalhesCliente(row) {
     }
 
     const idade = (c.IDADE_CALCULADA !== undefined && c.IDADE_CALCULADA !== null) ? c.IDADE_CALCULADA : null;
-    const dataNascFmt = c['Data de Nascimento'] ? formatarData(c['Data de Nascimento']) : null;
+    const dataNascFmt = c['DATA DE NASCIMENTO'] ? formatarData(c['DATA DE NASCIMENTO']) : null;
 
     _setText('viewClienteContato', c.CONTATO || '—');
     _setText('viewClienteCpf', c.CPF || '—');
@@ -679,7 +679,7 @@ function verDetalhesClienteRemovido(row) {
     }
 
     const idade = (c.IDADE_CALCULADA !== undefined && c.IDADE_CALCULADA !== null) ? c.IDADE_CALCULADA : null;
-    const dataNascFmt = c['Data de Nascimento'] ? formatarData(c['Data de Nascimento']) : null;
+    const dataNascFmt = c['DATA DE NASCIMENTO'] ? formatarData(c['DATA DE NASCIMENTO']) : null;
 
     _setText('viewRemovidoContato', c.CONTATO || '—');
     _setText('viewRemovidoCpf', c.CPF || '—');
@@ -734,7 +734,7 @@ function abrirModalCliente(modo, dados) {
         _setVal('clienteContato', dados.CONTATO || '');
         _setVal('clienteCPF', dados.CPF || '');
         _setVal('clienteCidade', dados.CIDADE || '');
-        _setVal('clienteDataNascimento', converterDataISO(dados['Data de Nascimento'] || ''));
+        _setVal('clienteDataNascimento', converterDataISO(dados['DATA DE NASCIMENTO'] || ''));
         _setVal('clienteTipo', dados['TIPO DE CLIENTE'] || 'PF');
         _setVal('clienteSexo', dados.SEXO || 'MASCULINO');
         _setVal('clienteStatus', dados.STATUS || 'ATIVO');
