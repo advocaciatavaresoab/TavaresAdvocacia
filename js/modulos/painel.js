@@ -378,7 +378,7 @@ function preencherAgendaRapida(processos, pericias, eventosAgenda) {
     const hoje = itensComData.filter(item => item.dias === 0);
 
     // --- CORREÇÃO 2: PRÓXIMOS = dias > 0 E dias <= 7 (semana) ---
-    const proximos = itensComData.filter(item => item.dias > 0 && item.dias <= 7);
+    const proximos = itensComData.filter(item => item.dias > 0 && item.dias <= 15);
 
     // Ordena por data
     hoje.sort((a, b) => a.dias - b.dias);
