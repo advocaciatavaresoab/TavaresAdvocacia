@@ -168,7 +168,7 @@ function aplicarFiltrosAtividades() {
     if (filtroAtualAtividades !== 'todos') {
         filtrados = filtrados.filter(a =>
             String(a.STATUS || '').toUpperCase() === filtroAtualAtividades.toUpperCase() ||
-            String(a.SITUAÇÃO || '').toUpperCase() === filtroAtualAtividades.toUpperCase()
+            String(a.SITUACAO || '').toUpperCase() === filtroAtualAtividades.toUpperCase()
         );
     }
 
@@ -262,7 +262,7 @@ function renderizarTabelaAtividades(atividades) {
 
     tbody.innerHTML = atividades.map(a => {
         const statusClass = getStatusAtividadeClass(a.STATUS);
-        const situacaoClass = getSituacaoAtividadeClass(a.SITUAÇÃO);
+        const situacaoClass = getSituacaoAtividadeClass(a.SITUACAO);
         const prazoClass = getPrazoClass(a.PRAZO);
         
         let botoesAcao = '';
@@ -312,7 +312,7 @@ function renderizarTabelaAtividades(atividades) {
                 <td><span class="badge-tipo-prazo">${esc(a['TIPO DE PRAZO'])}</span></td>
                 <td>${esc(a.RESPONSAVEL)}</td>
                 <td><span class="status ${statusClass}">${esc(a.STATUS)}</span></td>
-                <td><span class="status ${situacaoClass}">${esc(a.SITUAÇÃO)}</span></td>
+                <td><span class="status ${situacaoClass}">${esc(a.SITUACAO)}</span></td>
                 <td>
                     <div style="display: flex; gap: 0.3rem; align-items: center; flex-wrap: wrap;">
                         <button class="btn-icon-small" onclick="editarAtividade('${a._row}')" title="Editar">
@@ -558,7 +558,7 @@ function carregarAtividadeParaEdicao(row) {
     document.getElementById('atividadeTipoPrazo').value = atividade['TIPO DE PRAZO'] || '';
     document.getElementById('atividadeResponsavel').value = atividade.RESPONSAVEL || '';
     document.getElementById('atividadeStatus').value = atividade.STATUS || '';
-    document.getElementById('atividadeSituacao').value = atividade.SITUAÇÃO || '';
+    document.getElementById('atividadeSituacao').value = atividade.SITUACAO || '';
 
     setTimeout(() => {
         const event = new Event('change');
@@ -586,7 +586,7 @@ async function salvarAtividade() {
         'TIPO DE PRAZO': document.getElementById('atividadeTipoPrazo')?.value || '',
         'RESPONSAVEL': document.getElementById('atividadeResponsavel')?.value || '',
         'STATUS': document.getElementById('atividadeStatus')?.value || '',
-        'SITUAÇÃO': document.getElementById('atividadeSituacao')?.value || ''
+        'SITUACAO': document.getElementById('atividadeSituacao')?.value || ''
     };
 
     //console.log('📝 Salvando atividade:', dados);
