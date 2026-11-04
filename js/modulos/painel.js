@@ -164,7 +164,7 @@ async function carregarDadosPainel() {
 
         let eventosAgenda = [];
         try {
-            eventosAgenda = await carregarComCache('AGENDA').catch(() => []);
+            eventosAgenda = await carregarComCache('AGENDA', true); 
             //console.log(`📋 Eventos da AGENDA: ${eventosAgenda.length}`);
         } catch (e) {
             //console.log('⚠️ Aba AGENDA não encontrada');
