@@ -796,7 +796,7 @@ async function salvarCliente() {
         'CONTATO': _val('clienteContato'),
         'CPF': _val('clienteCPF'),
         'CIDADE': _val('clienteCidade'),
-        'Data de Nascimento': _val('clienteDataNascimento'),
+        'DATA DE NASCIMENTO': _val('clienteDataNascimento'),
         'TIPO DE CLIENTE': _val('clienteTipo') || 'PF',
         'SEXO': _val('clienteSexo') || 'MASCULINO',
         'STATUS': _val('clienteStatus') || 'ATIVO',
