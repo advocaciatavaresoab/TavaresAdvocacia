@@ -7,11 +7,24 @@ let mesAtual = new Date().getMonth();
 let anoAtual = new Date().getFullYear();
 let salvandoEvento = false;
 
+// ==================== HELPERS DE CAMPO ====================
+/**
+ * Lê o primeiro valor não-vazio entre as chaves informadas.
+ * Tolera diferenças de capitalização/acento entre frontend e planilha.
+ */
+function campoEvento(e, ...chaves) {
+    if (!e) return '';
+    for (const k of chaves) {
+        if (e[k] !== undefined && e[k] !== null && e[k] !== '') return e[k];
+    }
+    return '';
+}
+
 // ==================== HELPER DE FUSO HORÁRIO ====================
 function parseDataLocal(dataStr) {
     if (!dataStr) return null;
     if (dataStr instanceof Date) return dataStr;
-    
+
     const str = String(dataStr).trim();
     const matchIso = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
     if (matchIso) {
@@ -20,7 +33,7 @@ function parseDataLocal(dataStr) {
         const dia = parseInt(matchIso[3], 10);
         return new Date(ano, mes, dia);
     }
-    
+
     const matchBr = str.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
     if (matchBr) {
         const dia = parseInt(matchBr[1], 10);
@@ -28,7 +41,7 @@ function parseDataLocal(dataStr) {
         const ano = parseInt(matchBr[3], 10);
         return new Date(ano, mes, dia);
     }
-    
+
     const d = new Date(str);
     return isNaN(d.getTime()) ? null : d;
 }
@@ -56,15 +69,11 @@ function formatarDuracao(minutos) {
 
 // ==================== INICIALIZAÇÃO ====================
 async function inicializarAgenda() {
-    //console.log('📅 Inicializando agenda...');
-    
     await aguardarElementosAgenda();
     await carregarEventos();
     await carregarProcessosParaAgenda();
     renderizarCalendario();
     initEventosAgenda();
-    
-    //console.log('✅ Módulo agenda inicializado');
 }
 
 function aguardarElementosAgenda() {
@@ -88,13 +97,13 @@ function initEventosAgenda() {
         if (mesAtual < 0) { mesAtual = 11; anoAtual--; }
         renderizarCalendario();
     });
-    
+
     document.getElementById('btnMesProximo')?.addEventListener('click', () => {
         mesAtual++;
         if (mesAtual > 11) { mesAtual = 0; anoAtual++; }
         renderizarCalendario();
     });
-    
+
     document.getElementById('btnHoje')?.addEventListener('click', () => {
         const hoje = new Date();
         mesAtual = hoje.getMonth();
@@ -109,7 +118,7 @@ function initEventosAgenda() {
     }, 300));
 
     document.querySelectorAll('.calendario-nav .filtro-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             document.querySelectorAll('.calendario-nav .filtro-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             filtroAtualAgenda = this.getAttribute('data-filtro');
@@ -122,12 +131,12 @@ function initEventosAgenda() {
     document.getElementById('fecharModalEvento')?.addEventListener('click', fecharModalEvento);
     document.getElementById('cancelarEvento')?.addEventListener('click', fecharModalEvento);
     document.getElementById('salvarEvento')?.addEventListener('click', salvarEvento);
-    
+
     // Auto-preenche cliente ao selecionar processo
-    document.getElementById('eventoProcesso')?.addEventListener('input', function() {
+    document.getElementById('eventoProcesso')?.addEventListener('input', function () {
         preencherClientePorProcesso(this.value);
     });
-    document.getElementById('eventoProcesso')?.addEventListener('change', function() {
+    document.getElementById('eventoProcesso')?.addEventListener('change', function () {
         preencherClientePorProcesso(this.value);
     });
 
@@ -141,10 +150,13 @@ function initEventosAgenda() {
 async function carregarEventos() {
     try {
         const dados = await carregarComCache('AGENDA');
-        //console.log('📋 Dados brutos:', dados);
-        
-        todosEventos = dados.filter(e => e.Data || e['DATA EVENTO'] || e['Cliente/Parte']);
-        //console.log(`📋 Eventos carregados: ${todosEventos.length}`);
+
+        todosEventos = dados.filter(e =>
+            campoEvento(e, 'DATA') ||
+            campoEvento(e, 'CLIENTE/PARTE') ||
+            campoEvento(e, 'TIPO DE EVENTO')
+        );
+
         aplicarFiltrosAgenda();
     } catch (error) {
         console.error('Erro ao carregar agenda:', error);
@@ -154,13 +166,11 @@ async function carregarEventos() {
 async function carregarProcessosParaAgenda() {
     try {
         const dados = await carregarComCache('PROCESSOS');
-        
+
         todosProcessosAgenda = dados.filter(p => p['N PROCESSO'] && String(p['N PROCESSO']).trim());
-        //console.log(`📋 Processos para a agenda: ${todosProcessosAgenda.length}`);
-        
+
         preencherDatalistProcessos();
     } catch (error) {
-        //console.error('Erro ao carregar processos para agenda:', error);
         todosProcessosAgenda = [];
     }
 }
@@ -168,13 +178,13 @@ async function carregarProcessosParaAgenda() {
 function preencherDatalistProcessos() {
     const datalist = document.getElementById('listaProcessosAgenda');
     if (!datalist) return;
-    
+
     const ordenados = [...todosProcessosAgenda].sort((a, b) => {
         const na = String(a['N PROCESSO'] || '').trim();
         const nb = String(b['N PROCESSO'] || '').trim();
         return na.localeCompare(nb);
     });
-    
+
     datalist.innerHTML = ordenados.map(p => {
         const num = String(p['N PROCESSO'] || '').trim();
         const cliente = String(p.CLIENTE || '').trim();
@@ -189,19 +199,18 @@ function preencherDatalistProcessos() {
 function preencherClientePorProcesso(numeroProcesso) {
     const campoCliente = document.getElementById('eventoCliente');
     if (!campoCliente) return;
-    
+
     const numero = String(numeroProcesso || '').trim();
     if (!numero) return;
-    
-    const processo = todosProcessosAgenda.find(p => 
+
+    const processo = todosProcessosAgenda.find(p =>
         String(p['N PROCESSO'] || '').trim().toLowerCase() === numero.toLowerCase()
     );
-    
+
     if (processo) {
         const cliente = String(processo.CLIENTE || '').trim();
         if (cliente) {
             campoCliente.value = cliente;
-            //console.log(`✅ Cliente preenchido automaticamente: ${cliente}`);
         }
     }
 }
@@ -210,61 +219,51 @@ function preencherClientePorProcesso(numeroProcesso) {
 function renderizarCalendario() {
     const container = document.getElementById('calendarioDias');
     if (!container) return;
-    
+
     const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
                    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    document.getElementById('tituloMesAno').textContent = `${meses[mesAtual]} ${anoAtual}`;
-    
+    const elTitulo = document.getElementById('tituloMesAno');
+    if (elTitulo) elTitulo.textContent = `${meses[mesAtual]} ${anoAtual}`;
+
     const primeiroDia = new Date(anoAtual, mesAtual, 1);
     const ultimoDia = new Date(anoAtual, mesAtual + 1, 0);
     const diaInicio = primeiroDia.getDay();
     const totalDias = ultimoDia.getDate();
     const hoje = new Date();
-    
+
     const diasComEventos = new Set();
     todosEventos.forEach(e => {
-        const dataStr = e.Data || e['DATA EVENTO'];
+        const dataStr = campoEvento(e, 'DATA');
         const d = parseDataLocal(dataStr);
-        if (d) {
-            if (d.getMonth() === mesAtual && d.getFullYear() === anoAtual) {
-                diasComEventos.add(d.getDate());
-            }
+        if (d && d.getMonth() === mesAtual && d.getFullYear() === anoAtual) {
+            diasComEventos.add(d.getDate());
         }
     });
-    
+
     let html = '';
-    
+
     for (let i = 0; i < diaInicio; i++) {
         html += `<div class="calendario-dia outro-mes"></div>`;
     }
-    
+
     for (let dia = 1; dia <= totalDias; dia++) {
-        let classes = ['calendario-dia'];
-        
+        const classes = ['calendario-dia'];
         const dataDia = new Date(anoAtual, mesAtual, dia);
-        
-        if (dataDia.toDateString() === hoje.toDateString()) {
-            classes.push('hoje');
-        }
-        
-        if (dataSelecionada && 
+
+        if (dataDia.toDateString() === hoje.toDateString()) classes.push('hoje');
+
+        if (dataSelecionada &&
             dataDia.getDate() === dataSelecionada.getDate() &&
             dataDia.getMonth() === dataSelecionada.getMonth() &&
             dataDia.getFullYear() === dataSelecionada.getFullYear()) {
             classes.push('selecionado');
         }
-        
-        if (diasComEventos.has(dia)) {
-            classes.push('tem-evento');
-        }
-        
-        html += `
-            <div class="${classes.join(' ')}" onclick="selecionarData(${anoAtual}, ${mesAtual}, ${dia})">
-                ${dia}
-            </div>
-        `;
+
+        if (diasComEventos.has(dia)) classes.push('tem-evento');
+
+        html += `<div class="${classes.join(' ')}" onclick="selecionarData(${anoAtual}, ${mesAtual}, ${dia})">${dia}</div>`;
     }
-    
+
     container.innerHTML = html;
 }
 
@@ -277,9 +276,9 @@ function selecionarData(ano, mes, dia) {
 // ==================== MARCAR COMO REALIZADO ====================
 async function marcarEventoComoRealizado(row) {
     if (!confirm('Marcar este evento como REALIZADO?')) return;
-    
+
     try {
-        await apiUpdate('AGENDA', parseInt(row), { Status: 'REALIZADO' });
+        await apiUpdate('AGENDA', parseInt(row), { 'STATUS': 'REALIZADO' });
         invalidarCacheAposEscrita('AGENDA');
         notificar('✅ Evento marcado como realizado!', 'success');
         await carregarEventos();
@@ -296,17 +295,16 @@ function mostrarEventosDoDia(data) {
     const tbody = document.getElementById('tbodyEventosDia');
     const titulo = document.getElementById('tituloEventosDia');
     if (!tbody || !titulo) return;
-    
+
     const dataAlvoStr = formatarDataISO(data);
-    
+
     const eventosDoDia = todosEventos.filter(e => {
-        const dataEventoStr = e.Data || e['DATA EVENTO'];
-        const d = parseDataLocal(dataEventoStr);
+        const d = parseDataLocal(campoEvento(e, 'DATA'));
         return d && formatarDataISO(d) === dataAlvoStr;
     });
-    
+
     titulo.textContent = `Eventos de ${data.toLocaleDateString('pt-BR')}`;
-    
+
     if (!eventosDoDia.length) {
         tbody.innerHTML = `
             <tr class="row-empty">
@@ -319,19 +317,19 @@ function mostrarEventosDoDia(data) {
             </tr>`;
         return;
     }
-    
+
     tbody.innerHTML = eventosDoDia.map(e => {
-        const tipo = e['Tipo de Evento'] || e.TIPO || '';
+        const tipo = campoEvento(e, 'TIPO DE EVENTO');
         const tipoClass = tipo.toLowerCase()
             .replace('audiência', 'audiencia')
             .replace('perícia', 'pericia')
             .replace('reunião', 'reuniao') || 'outro';
-        
-        const status = e.Status || e.STATUS || '';
+
+        const status = campoEvento(e, 'STATUS');
         const isRealizado = status.toUpperCase() === 'REALIZADO';
         const isCancelado = status.toUpperCase() === 'CANCELADO';
-        const temLink = (e['Link (videoconferência)'] || e.LINK || '').trim();
-        
+        const temLink = campoEvento(e, 'LINK').trim();
+
         let botaoRealizar = '';
         if (!isRealizado && !isCancelado) {
             botaoRealizar = `
@@ -340,19 +338,19 @@ function mostrarEventosDoDia(data) {
                 </button>
             `;
         }
-        
-        const indicadorLink = temLink 
-            ? `<i class="fas fa-video" style="color: #4a9eff; margin-left: 0.3rem;" title="Tem videoconferência"></i>` 
+
+        const indicadorLink = temLink
+            ? `<i class="fas fa-video" style="color: #4a9eff; margin-left: 0.3rem;" title="Tem videoconferência"></i>`
             : '';
-        
+
         return `
             <tr>
-                <td><strong>${esc(e.Horário || e.HORARIO || '—')}</strong></td>
+                <td><strong>${esc(campoEvento(e, 'HORARIO') || '—')}</strong></td>
                 <td><span class="badge-evento ${tipoClass}">${esc(tipo)}</span></td>
-                <td><span class="mono-text">${esc(e['Nº Processo'] || e['N PROCESSO'] || e.PROCESSO || '')}</span></td>
-                <td>${esc(e['Cliente/Parte'] || e.CLIENTE || '')} ${indicadorLink}</td>
-                <td>${esc(e['Descrição / Observações'] || e.DESCRICAO || e.OBS || '')}</td>
-                <td>${esc(e.Local || e.LOCAL || '')}</td>
+                <td><span class="mono-text">${esc(campoEvento(e, 'N PROCESSO'))}</span></td>
+                <td>${esc(campoEvento(e, 'CLIENTE/PARTE'))} ${indicadorLink}</td>
+                <td>${esc(campoEvento(e, 'OBS'))}</td>
+                <td>${esc(campoEvento(e, 'LOCAL'))}</td>
                 <td>
                     <span class="status ${isRealizado ? 'completed' : isCancelado ? 'urgent' : 'active'}">${esc(status)}</span>
                 </td>
@@ -375,36 +373,36 @@ function mostrarEventosDoDia(data) {
 // ==================== PRÓXIMOS EVENTOS ====================
 function aplicarFiltrosAgenda() {
     let filtrados = [...todosEventos];
-    
+
     filtrados = filtrados.filter(e => {
-        const status = (e.Status || e.STATUS || '').toUpperCase();
+        const status = campoEvento(e, 'STATUS').toUpperCase();
         return status !== 'REALIZADO' && status !== 'CANCELADO';
     });
-    
+
     if (filtroAtualAgenda !== 'todos') {
         filtrados = filtrados.filter(e => {
-            const tipo = String(e['Tipo de Evento'] || e.TIPO || '').toUpperCase();
+            const tipo = campoEvento(e, 'TIPO DE EVENTO').toUpperCase();
             return tipo.includes(filtroAtualAgenda.toUpperCase());
         });
     }
-    
+
     const busca = (document.getElementById('buscaAgenda')?.value || '').toLowerCase().trim();
     if (busca) {
         filtrados = filtrados.filter(e =>
-            String(e['Cliente/Parte'] || e.CLIENTE || '').toLowerCase().includes(busca) ||
-            String(e['Nº Processo'] || e['N PROCESSO'] || '').toLowerCase().includes(busca) ||
-            String(e['Descrição / Observações'] || e.DESCRICAO || '').toLowerCase().includes(busca)
+            campoEvento(e, 'CLIENTE/PARTE').toLowerCase().includes(busca) ||
+            campoEvento(e, 'N PROCESSO').toLowerCase().includes(busca) ||
+            campoEvento(e, 'OBS').toLowerCase().includes(busca)
         );
     }
-    
+
     filtrados.sort((a, b) => {
-        const da = parseDataLocal(a.Data || a['DATA EVENTO']) || new Date(0);
-        const db = parseDataLocal(b.Data || b['DATA EVENTO']) || new Date(0);
+        const da = parseDataLocal(campoEvento(a, 'DATA')) || new Date(0);
+        const db = parseDataLocal(campoEvento(b, 'DATA')) || new Date(0);
         return da - db;
     });
-    
+
     const proximos = filtrados.slice(0, 5);
-    
+
     renderizarTimeline(proximos);
     setText('contagemEventos', `${filtrados.length} eventos`);
 }
@@ -412,7 +410,7 @@ function aplicarFiltrosAgenda() {
 function renderizarTimeline(eventos) {
     const timeline = document.getElementById('timelineEventos');
     if (!timeline) return;
-    
+
     if (!eventos.length) {
         timeline.innerHTML = `
             <div class="timeline-item">
@@ -421,16 +419,19 @@ function renderizarTimeline(eventos) {
             </div>`;
         return;
     }
-    
+
     timeline.innerHTML = eventos.map(e => {
-        const data = parseDataLocal(e.Data || e['DATA EVENTO']);
+        const data = parseDataLocal(campoEvento(e, 'DATA'));
         const dia = data ? String(data.getDate()).padStart(2, '0') : '—';
         const mes = data ? data.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '') : '—';
-        
-        const tipo = e['Tipo de Evento'] || e.TIPO || '';
-        const cliente = e['Cliente/Parte'] || e.CLIENTE || '';
-        const temLink = (e['Link (videoconferência)'] || e.LINK || '').trim();
-        
+
+        const tipo = campoEvento(e, 'TIPO DE EVENTO');
+        const cliente = campoEvento(e, 'CLIENTE/PARTE');
+        const temLink = campoEvento(e, 'LINK').trim();
+        const horario = campoEvento(e, 'HORARIO');
+        const local = campoEvento(e, 'LOCAL');
+        const obs = campoEvento(e, 'OBS');
+
         return `
             <div class="timeline-item">
                 <div class="timeline-date">
@@ -439,9 +440,9 @@ function renderizarTimeline(eventos) {
                 </div>
                 <div class="timeline-content">
                     <h4>${esc(tipo)} - ${esc(cliente)} ${temLink ? '🎥' : ''}</h4>
-                    <p>${esc(e['Descrição / Observações'] || e.DESCRICAO || '')}</p>
-                    ${e.Horário || e.HORARIO ? `<small><i class="fas fa-clock"></i> ${e.Horário || e.HORARIO}</small>` : ''}
-                    ${e.Local || e.LOCAL ? `<small style="margin-left: 0.5rem;"><i class="fas fa-map-marker-alt"></i> ${esc(e.Local || e.LOCAL)}</small>` : ''}
+                    <p>${esc(obs)}</p>
+                    ${horario ? `<small><i class="fas fa-clock"></i> ${esc(horario)}</small>` : ''}
+                    ${local ? `<small style="margin-left: 0.5rem;"><i class="fas fa-map-marker-alt"></i> ${esc(local)}</small>` : ''}
                 </div>
             </div>
         `;
@@ -454,32 +455,32 @@ function abrirModalEvento(modo, dataPredefinida) {
     const titulo = document.getElementById('modalTituloEvento');
     const form = document.getElementById('formEvento');
     if (!modal || !form) return;
-    
+
     form.reset();
     document.getElementById('eventoRow').value = '';
-    
+
     const btnSalvar = document.getElementById('salvarEvento');
     if (btnSalvar) {
         btnSalvar.disabled = false;
         btnSalvar.innerHTML = '<i class="fas fa-save"></i> Salvar';
     }
-    
+
     if (modo === 'editar' && dataPredefinida) {
         const evento = todosEventos.find(e => e._row === dataPredefinida);
         if (evento) {
             titulo.textContent = 'Editar Evento';
             document.getElementById('eventoRow').value = evento._row || '';
-            document.getElementById('eventoTipo').value = evento['Tipo de Evento'] || evento.TIPO || 'OUTRO';
-            document.getElementById('eventoProcesso').value = evento['Nº Processo'] || evento['N PROCESSO'] || '';
-            document.getElementById('eventoCliente').value = evento['Cliente/Parte'] || evento.CLIENTE || '';
-            document.getElementById('eventoData').value = converterDataISO(evento.Data || evento['DATA EVENTO']) || '';
-            document.getElementById('eventoHorario').value = evento.Horário || evento.HORARIO || '';
-            document.getElementById('eventoDuracao').value = evento.Duração || evento.DURACAO || '60';
-            document.getElementById('eventoLocal').value = evento.Local || evento.LOCAL || '';
-            document.getElementById('eventoResponsavel').value = evento.Responsável || evento.RESPONSÁVEL || '';
-            document.getElementById('eventoStatus').value = evento.Status || evento.STATUS || 'AGENDADO';
-            document.getElementById('eventoLink').value = evento['Link (videoconferência)'] || evento.LINK || '';
-            document.getElementById('eventoDescricao').value = evento['Descrição / Observações'] || evento.DESCRICAO || evento.OBS || '';
+            document.getElementById('eventoTipo').value        = campoEvento(evento, 'TIPO DE EVENTO') || 'OUTRO';
+            document.getElementById('eventoProcesso').value    = campoEvento(evento, 'N PROCESSO');
+            document.getElementById('eventoCliente').value     = campoEvento(evento, 'CLIENTE/PARTE');
+            document.getElementById('eventoData').value        = converterDataISO(campoEvento(evento, 'DATA')) || '';
+            document.getElementById('eventoHorario').value     = campoEvento(evento, 'HORARIO');
+            document.getElementById('eventoDuracao').value     = campoEvento(evento, 'DURACAO') || '60';
+            document.getElementById('eventoLocal').value       = campoEvento(evento, 'LOCAL');
+            document.getElementById('eventoResponsavel').value = campoEvento(evento, 'RESPONSAVEL');
+            document.getElementById('eventoStatus').value      = campoEvento(evento, 'STATUS') || 'AGENDADO';
+            document.getElementById('eventoLink').value        = campoEvento(evento, 'LINK');
+            document.getElementById('eventoDescricao').value   = campoEvento(evento, 'OBS');
         }
     } else {
         titulo.textContent = 'Novo Evento';
@@ -490,13 +491,13 @@ function abrirModalEvento(modo, dataPredefinida) {
             document.getElementById('eventoData').value = formatarDataISO(new Date());
         }
     }
-    
+
     modal.classList.add('active');
 }
 
 function fecharModalEvento() {
     document.getElementById('modalEvento')?.classList.remove('active');
-    
+
     const btnSalvar = document.getElementById('salvarEvento');
     if (btnSalvar) {
         btnSalvar.disabled = false;
@@ -511,37 +512,36 @@ async function salvarEvento() {
         notificar('Aguarde, salvando...', 'warning');
         return;
     }
-    
+
     const row = document.getElementById('eventoRow')?.value;
-    
+
+    // Chaves EXATAS dos headers da planilha AGENDA
     const dados = {
-        'Tipo de Evento': document.getElementById('eventoTipo')?.value || 'OUTRO',
-        'Cliente/Parte': document.getElementById('eventoCliente')?.value?.trim() || '',
-        'Nº Processo': document.getElementById('eventoProcesso')?.value?.trim() || '',
-        'Data': document.getElementById('eventoData')?.value || '',
-        'Horário': document.getElementById('eventoHorario')?.value || '',
-        'Duração': document.getElementById('eventoDuracao')?.value || '60',
-        'Local': document.getElementById('eventoLocal')?.value?.trim() || '',
-        'Responsável': document.getElementById('eventoResponsavel')?.value?.trim() || '',
-        'Status': document.getElementById('eventoStatus')?.value || 'AGENDADO',
-        'Link (videoconferência)': document.getElementById('eventoLink')?.value?.trim() || '',
-        'Descrição / Observações': document.getElementById('eventoDescricao')?.value?.trim() || ''
+        'TIPO DE EVENTO': document.getElementById('eventoTipo')?.value || 'OUTRO',
+        'CLIENTE/PARTE':  document.getElementById('eventoCliente')?.value?.trim() || '',
+        'N PROCESSO':     document.getElementById('eventoProcesso')?.value?.trim() || '',
+        'DATA':           document.getElementById('eventoData')?.value || '',
+        'HORARIO':        document.getElementById('eventoHorario')?.value || '',
+        'DURACAO':        document.getElementById('eventoDuracao')?.value || '60',
+        'LOCAL':          document.getElementById('eventoLocal')?.value?.trim() || '',
+        'RESPONSAVEL':    document.getElementById('eventoResponsavel')?.value?.trim() || '',
+        'STATUS':         document.getElementById('eventoStatus')?.value || 'AGENDADO',
+        'LINK':           document.getElementById('eventoLink')?.value?.trim() || '',
+        'OBS':            document.getElementById('eventoDescricao')?.value?.trim() || ''
     };
-    
-    if (!dados['Data']) {
+
+    if (!dados['DATA']) {
         notificar('Preencha a Data!', 'warning');
         return;
     }
-    
-    //console.log('📝 Salvando evento:', dados);
-    
+
     salvandoEvento = true;
     const btnSalvar = document.getElementById('salvarEvento');
     if (btnSalvar) {
         btnSalvar.disabled = true;
         btnSalvar.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Salvando...';
     }
-    
+
     try {
         if (row) {
             await apiUpdate('AGENDA', parseInt(row), dados);
@@ -550,9 +550,9 @@ async function salvarEvento() {
             await apiCreate('AGENDA', dados);
             notificar('Evento criado!', 'success');
         }
-        
+
         invalidarCacheAposEscrita('AGENDA');
-        
+
         fecharModalEvento();
         await carregarEventos();
         renderizarCalendario();
@@ -576,22 +576,22 @@ function verDetalhesEvento(row) {
         notificar('Evento não encontrado', 'error');
         return;
     }
-    
+
     const modal = document.getElementById('modalVisualizarEvento');
     if (!modal) return;
-    
-    const tipo = e['Tipo de Evento'] || e.TIPO || 'OUTRO';
-    const cliente = e['Cliente/Parte'] || e.CLIENTE || '—';
-    const processo = e['Nº Processo'] || e['N PROCESSO'] || e.PROCESSO || '—';
-    const data = parseDataLocal(e.Data || e['DATA EVENTO']);
-    const horario = e.Horário || e.HORARIO || '';
-    const duracao = e.Duração || e.DURACAO || '60';
-    const local = e.Local || e.LOCAL || '—';
-    const responsavel = e.Responsável || e.RESPONSÁVEL || '—';
-    const status = (e.Status || e.STATUS || 'AGENDADO').toUpperCase();
-    const link = e['Link (videoconferência)'] || e.LINK || '';
-    const descricao = e['Descrição / Observações'] || e.DESCRICAO || e.OBS || '';
-    
+
+    const tipo        = campoEvento(e, 'TIPO DE EVENTO') || 'OUTRO';
+    const cliente     = campoEvento(e, 'CLIENTE/PARTE') || '—';
+    const processo    = campoEvento(e, 'N PROCESSO') || '—';
+    const data        = parseDataLocal(campoEvento(e, 'DATA'));
+    const horario     = campoEvento(e, 'HORARIO');
+    const duracao     = campoEvento(e, 'DURACAO') || '60';
+    const local       = campoEvento(e, 'LOCAL') || '—';
+    const responsavel = campoEvento(e, 'RESPONSAVEL') || '—';
+    const status      = (campoEvento(e, 'STATUS') || 'AGENDADO').toUpperCase();
+    const link        = campoEvento(e, 'LINK');
+    const descricao   = campoEvento(e, 'OBS');
+
     // Ícone dinâmico
     const icone = document.getElementById('vizEventoIcone');
     if (icone) {
@@ -603,10 +603,10 @@ function verDetalhesEvento(row) {
         else if (tipoUpper.includes('REUNIÃO') || tipoUpper.includes('REUNIAO')) iconClass = 'fa-users';
         icone.innerHTML = `<i class="fas ${iconClass}"></i>`;
     }
-    
+
     // Cabeçalho
     document.getElementById('vizEventoTipo').textContent = tipo;
-    
+
     let dataHoraTexto = '';
     if (data) {
         dataHoraTexto = data.toLocaleDateString('pt-BR', {
@@ -619,7 +619,7 @@ function verDetalhesEvento(row) {
     if (horario) dataHoraTexto += ` às ${horario}`;
     if (duracao) dataHoraTexto += ` (${formatarDuracao(duracao)})`;
     document.getElementById('vizEventoDataHora').textContent = dataHoraTexto || '—';
-    
+
     // Status
     const statusEl = document.getElementById('vizEventoStatus');
     if (statusEl) {
@@ -630,12 +630,12 @@ function verDetalhesEvento(row) {
         else if (status === 'ADIADO') statusClass = 'pending';
         statusEl.className = 'status ' + statusClass;
     }
-    
+
     // Link de videoconferência
     const linkBox = document.getElementById('vizEventoLinkBox');
     const linkInput = document.getElementById('vizEventoLink');
     const linkAbrir = document.getElementById('vizEventoLinkAbrir');
-    
+
     if (link && link.trim()) {
         if (linkBox) linkBox.style.display = 'block';
         if (linkInput) linkInput.value = link;
@@ -643,14 +643,14 @@ function verDetalhesEvento(row) {
     } else {
         if (linkBox) linkBox.style.display = 'none';
     }
-    
+
     // Detalhes
     document.getElementById('vizEventoCliente').textContent = cliente;
     document.getElementById('vizEventoProcesso').textContent = processo;
     document.getElementById('vizEventoDuracao').textContent = formatarDuracao(duracao);
     document.getElementById('vizEventoLocal').textContent = local;
     document.getElementById('vizEventoResponsavel').textContent = responsavel;
-    
+
     // Descrição
     const descBox = document.getElementById('vizEventoDescricaoBox');
     if (descricao && descricao.trim()) {
@@ -659,7 +659,7 @@ function verDetalhesEvento(row) {
     } else {
         if (descBox) descBox.style.display = 'none';
     }
-    
+
     modal.dataset.eventoRow = row;
     modal.classList.add('active');
 }
@@ -683,26 +683,21 @@ async function copiarLinkEvento() {
         notificar('Nenhum link para copiar', 'warning');
         return;
     }
-    
+
     const link = input.value;
-    
+
     try {
-        // Método moderno (Chrome 66+, Firefox 63+, Safari 13.1+, Edge 79+)
         if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
             await navigator.clipboard.writeText(link);
             notificar('✅ Link copiado para a área de transferência!', 'success');
             return;
         }
-        
-        // Fallback: seleciona o texto e orienta o usuário
+
         input.select();
         input.setSelectionRange(0, link.length);
         notificar('Link selecionado — pressione Ctrl+C para copiar', 'info');
-        
     } catch (error) {
         console.error('Erro ao copiar link:', error);
-        
-        // Fallback silencioso: seleciona o texto
         input.select();
         input.setSelectionRange(0, link.length);
         notificar('Selecione o link e use Ctrl+C', 'warning');
@@ -718,5 +713,3 @@ window.verDetalhesEvento = verDetalhesEvento;
 window.fecharModalVisualizarEvento = fecharModalVisualizarEvento;
 window.editarDoVisualizarEvento = editarDoVisualizarEvento;
 window.copiarLinkEvento = copiarLinkEvento;
-
-//console.log('📅 Módulo agenda carregado (v3.1 — visualização + copiar link)');
