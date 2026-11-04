@@ -557,7 +557,7 @@ function carregarAtividadeParaEdicao(row) {
     document.getElementById('atividadePrazo').value = atividade.PRAZO || '';
     document.getElementById('atividadeTipoPrazo').value = atividade['TIPO DE PRAZO'] || '';
     document.getElementById('atividadeResponsavel').value = atividade.RESPONSAVEL || '';
-    document.getElementById('atividadeStatus').value = atividade.STATUS || '';
+    document.getElementById('atividadeStatus').value = atividade.SITUACAO || atividade.SITUAÇÃO || '';
     document.getElementById('atividadeSituacao').value = atividade.SITUACAO || '';
 
     setTimeout(() => {
