@@ -1,4 +1,4 @@
-    // ==================== ESTADO ====================
+// ==================== ESTADO ====================
     let todasAtividades = [];
     let filtroAtualAtividades = 'todos';
     let atividadeEditando = null;
@@ -168,7 +168,7 @@
         if (filtroAtualAtividades !== 'todos') {
             filtrados = filtrados.filter(a =>
                 String(a.STATUS || '').toUpperCase() === filtroAtualAtividades.toUpperCase() ||
-                String(a.SITUACAO || '').toUpperCase() === filtroAtualAtividades.toUpperCase()
+                String(a.SITUACAO || a.SITUAÇÃO || '').toUpperCase() === filtroAtualAtividades.toUpperCase()
             );
         }
 
@@ -261,14 +261,20 @@
         const estagiario = isEstagiario();
 
         tbody.innerHTML = atividades.map(a => {
+            const norm = s => String(s || '').trim().toUpperCase();
+            const statusUp = norm(a.STATUS);
+            const situacaoRaw = a.SITUACAO || a.SITUAÇÃO || '';
+            const situacaoUp = norm(situacaoRaw);
+            const jaProtocolado = situacaoUp === 'PROTOCOLADO';
+
             const statusClass = getStatusAtividadeClass(a.STATUS);
-            const situacaoClass = getSituacaoAtividadeClass(a.SITUACAO);
+            const situacaoClass = getSituacaoAtividadeClass(situacaoRaw);
             const prazoClass = getPrazoClass(a.PRAZO);
             
             let botoesAcao = '';
             
             if (titular) {
-                if (a.STATUS === 'EM ANÁLISE') {
+                if (statusUp === 'EM ANÁLISE') {
                     botoesAcao = `
                         <button class="btn-icon-small" onclick="aprovarAtividade('${a._row}')" title="Aprovar (CONFERIDO)" style="color: var(--success);">
                             <i class="fas fa-check-circle"></i>
@@ -277,30 +283,32 @@
                             <i class="fas fa-undo-alt"></i>
                         </button>
                     `;
-                } else if (a.STATUS === 'CORRIGIR') {
+                } else if (statusUp === 'CORRIGIR') {
                     botoesAcao = `
                         <span style="font-size: 0.7rem; color: var(--warning);">⏳ Aguardando estagiário</span>
                     `;
-                } else if (a.STATUS === 'CONFERIDO') {
-                    botoesAcao = `
-                        <span style="font-size: 0.7rem; color: var(--success);">✅ Concluído</span>
-                    `;
+                } else if (statusUp === 'CONFERIDO') {
+                    botoesAcao = jaProtocolado
+                        ? `<span style="font-size: 0.7rem; color: var(--success);">✅ Protocolado</span>`
+                        : `<span style="font-size: 0.7rem; color: var(--warning);">⏳ Aguardando protocolo</span>`;
                 }
             } else if (estagiario) {
-                if (a.STATUS === 'CORRIGIR') {
+                if (statusUp === 'CORRIGIR') {
                     botoesAcao = `
                         <button class="btn-icon-small" onclick="enviarParaAnalise('${a._row}')" title="Enviar para análise (EM ANÁLISE)" style="color: var(--info);">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     `;
-                } else if (a.STATUS === 'EM ANÁLISE') {
+                } else if (statusUp === 'EM ANÁLISE') {
                     botoesAcao = `
                         <span style="font-size: 0.7rem; color: var(--warning);">⏳ Aguardando análise</span>
                     `;
-                } else if (a.STATUS === 'CONFERIDO') {
-                    botoesAcao = `
-                        <span style="font-size: 0.7rem; color: var(--success);">✅ Aprovado</span>
-                    `;
+                } else if (statusUp === 'CONFERIDO') {
+                    botoesAcao = jaProtocolado
+                        ? `<span style="font-size: 0.7rem; color: var(--success);">✅ Protocolado</span>`
+                        : `<button class="btn-icon-small" onclick="protocolarAtividade('${a._row}')" title="Marcar como PROTOCOLADO" style="color: var(--success);">
+                               <i class="fas fa-file-signature"></i>
+                           </button>`;
                 }
             }
 
@@ -312,7 +320,7 @@
                     <td><span class="badge-tipo-prazo">${esc(a['TIPO DE PRAZO'])}</span></td>
                     <td>${esc(a.RESPONSAVEL)}</td>
                     <td><span class="status ${statusClass}">${esc(a.STATUS)}</span></td>
-                    <td><span class="status ${situacaoClass}">${esc(a.SITUACAO)}</span></td>
+                    <td><span class="status ${situacaoClass}">${esc(situacaoRaw)}</span></td>
                     <td>
                         <div style="display: flex; gap: 0.3rem; align-items: center; flex-wrap: wrap;">
                             <button class="btn-icon-small" onclick="editarAtividade('${a._row}')" title="Editar">
@@ -380,7 +388,7 @@
             const usuario = auth.getUsuario();
             enviarNotificacaoInterna({
                 titulo: '📋 Atividade em Análise',
-                mensagem: `${usuario.nome} enviou a atividade de ${atividade.CLIENTE} para análise.`,
+                mensagem: `${usuario?.nome || 'Usuário'} enviou a atividade de ${atividade.CLIENTE} para análise.`,
                 tipo: 'info',
                 link: 'atividades',
                 processo: atividade.PROCESSO || ''
@@ -420,7 +428,7 @@
             const usuario = auth.getUsuario();
             enviarNotificacaoInterna({
                 titulo: '✅ Atividade Aprovada',
-                mensagem: `A atividade de ${atividade.CLIENTE} foi aprovada por ${usuario.nome}.`,
+                mensagem: `A atividade de ${atividade.CLIENTE} foi aprovada por ${usuario?.nome || 'Usuário'}.`,
                 tipo: 'success',
                 link: 'atividades',
                 processo: atividade.PROCESSO || ''
@@ -435,6 +443,7 @@
             processandoAcao = false;
         }
     }
+
     async function corrigirAtividade(row) {
         if (processandoAcao) {
             notificar('Aguarde, processando...', 'warning');
@@ -459,7 +468,7 @@
             const usuario = auth.getUsuario();
             enviarNotificacaoInterna({
                 titulo: '⚠️ Correção Solicitada',
-                mensagem: `A atividade de ${atividade.CLIENTE} precisa de correção. Solicitado por ${usuario.nome}.`,
+                mensagem: `A atividade de ${atividade.CLIENTE} precisa de correção. Solicitado por ${usuario?.nome || 'Usuário'}.`,
                 tipo: 'urgent',
                 link: 'atividades',
                 processo: atividade.PROCESSO || ''
@@ -469,6 +478,52 @@
             
         } catch (error) {
             console.error('❌ Erro ao solicitar correção:', error);
+            notificar('Erro: ' + error.message, 'error');
+        } finally {
+            processandoAcao = false;
+        }
+    }
+
+    // ESTAGIARIO: Protocolar (SITUACAO → PROTOCOLADO, mantendo STATUS = CONFERIDO)
+    async function protocolarAtividade(row) {
+        if (processandoAcao) {
+            notificar('Aguarde, processando...', 'warning');
+            return;
+        }
+
+        if (!isEstagiario()) {
+            notificar('Apenas estagiários podem protocolar.', 'warning');
+            return;
+        }
+
+        if (!confirm('Marcar esta atividade como PROTOCOLADA? Ela sairá do painel.')) return;
+
+        processandoAcao = true;
+
+        try {
+            const atividade = todasAtividades.find(a => String(a._row) === String(row));
+            if (!atividade) {
+                notificar('Atividade não encontrada', 'error');
+                return;
+            }
+
+            await apiUpdate('ATIVIDADES', parseInt(row), { SITUACAO: 'PROTOCOLADO' });
+            invalidarCacheAposEscrita('ATIVIDADES');
+            notificar('📄 Atividade protocolada!', 'success');
+
+            const usuario = auth.getUsuario();
+            enviarNotificacaoInterna({
+                titulo: '📄 Atividade Protocolada',
+                mensagem: `${usuario?.nome || 'Estagiário'} protocolou a atividade de ${atividade.CLIENTE}.`,
+                tipo: 'success',
+                link: 'atividades',
+                processo: atividade.PROCESSO || ''
+            });
+
+            await carregarDadosAtividades();
+
+        } catch (error) {
+            console.error('❌ Erro ao protocolar:', error);
             notificar('Erro: ' + error.message, 'error');
         } finally {
             processandoAcao = false;
@@ -557,8 +612,9 @@
         document.getElementById('atividadePrazo').value = atividade.PRAZO || '';
         document.getElementById('atividadeTipoPrazo').value = atividade['TIPO DE PRAZO'] || '';
         document.getElementById('atividadeResponsavel').value = atividade.RESPONSAVEL || '';
-        document.getElementById('atividadeStatus').value = atividade.SITUACAO || atividade.SITUAÇÃO || '';
-        document.getElementById('atividadeSituacao').value = atividade.SITUACAO || '';
+        // ✅ CORRIGIDO: STATUS usa a.STATUS (antes estava lendo SITUACAO por engano)
+        document.getElementById('atividadeStatus').value   = atividade.STATUS || '';
+        document.getElementById('atividadeSituacao').value = atividade.SITUACAO || atividade.SITUAÇÃO || '';
 
         setTimeout(() => {
             const event = new Event('change');
@@ -614,7 +670,7 @@
                     const usuario = auth.getUsuario();
                     enviarNotificacaoInterna({
                         titulo: '📋 Nova Atividade para Corrigir',
-                        mensagem: `${usuario.nome} criou uma nova atividade para ${dados.CLIENTE}. Aguardando correção.`,
+                        mensagem: `${usuario?.nome || 'Usuário'} criou uma nova atividade para ${dados.CLIENTE}. Aguardando correção.`,
                         tipo: 'info',
                         link: 'atividades',
                         processo: dados.PROCESSO || ''
@@ -672,5 +728,6 @@
     window.enviarParaAnalise = enviarParaAnalise;
     window.aprovarAtividade = aprovarAtividade;
     window.corrigirAtividade = corrigirAtividade;
+    window.protocolarAtividade = protocolarAtividade;
 
-    //console.log('📋 Módulo de atividades carregado (v2.0 — loading + proteção duplo clique)');
+    //console.log('📋 Módulo de atividades carregado (v2.1 — fluxo de protocolo)');

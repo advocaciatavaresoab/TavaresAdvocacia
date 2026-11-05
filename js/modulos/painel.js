@@ -218,16 +218,22 @@ function preencherAtividadesPendentes(atividades) {
     const tbody = document.getElementById('tabelaAtividadesPendentes');
     if (!tbody) return;
 
-    // Filtra apenas EM ANÁLISE e CORRIGIR
-    const pendentes = atividades.filter(a => 
-        a.STATUS === 'EM ANÁLISE' || a.STATUS === 'CORRIGIR'
-    );
+    const norm = s => String(s || '').trim().toUpperCase();
 
-    const emAnalise = pendentes.filter(a => a.STATUS === 'EM ANÁLISE');
-    const corrigir = pendentes.filter(a => a.STATUS === 'CORRIGIR');
+    // Inclui CONFERIDO; exclui só quando SITUACAO = PROTOCOLADO
+    const pendentes = atividades.filter(a => {
+        if (norm(a.SITUACAO || a.SITUAÇÃO) === 'PROTOCOLADO') return false;
+        const s = norm(a.STATUS);
+        return s === 'EM ANÁLISE' || s === 'CORRIGIR' || s === 'CONFERIDO';
+    });
+
+    const emAnalise  = pendentes.filter(a => norm(a.STATUS) === 'EM ANÁLISE');
+    const corrigir   = pendentes.filter(a => norm(a.STATUS) === 'CORRIGIR');
+    const conferidos = pendentes.filter(a => norm(a.STATUS) === 'CONFERIDO');
 
     setText('countEmAnalise', emAnalise.length);
     setText('countCorrigir', corrigir.length);
+    setText('countConferidos', conferidos.length);
 
     if (!pendentes.length) {
         tbody.innerHTML = `
@@ -251,8 +257,9 @@ function preencherAtividadesPendentes(atividades) {
     const exibir = pendentes.slice(0, 6);
 
     tbody.innerHTML = exibir.map(a => {
-        const statusClass = a.STATUS === 'EM ANÁLISE' ? 'pending' : 'urgent';
-        const situacaoClass = a.SITUACAO === 'AGUARDANDO' ? 'pending' : 'completed';
+        const st = norm(a.STATUS);
+        const statusClass = st === 'EM ANÁLISE' ? 'pending' : st === 'CONFERIDO' ? 'completed' : 'urgent';
+        const situacaoClass = norm(a.SITUACAO || a.SITUAÇÃO) === 'AGUARDANDO' ? 'pending' : 'completed';
         const prazoClass = getPrazoClass(a.PRAZO);
 
         return `
@@ -263,7 +270,7 @@ function preencherAtividadesPendentes(atividades) {
                 <td><span class="data-prazo ${prazoClass}">${formatarData(a.PRAZO)}</span></td>
                 <td>${esc(a.RESPONSAVEL)}</td>
                 <td><span class="status ${statusClass}">${esc(a.STATUS)}</span></td>
-                <td><span class="status ${situacaoClass}">${esc(a.SITUACAO)}</span></td>
+                <td><span class="status ${situacaoClass}">${esc(a.SITUACAO || a.SITUAÇÃO)}</span></td>
             </tr>
         `;
     }).join('');
