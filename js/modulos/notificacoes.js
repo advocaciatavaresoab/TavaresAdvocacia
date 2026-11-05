@@ -63,7 +63,8 @@ function statusDeveNotificar(tipo, status) {
     const statusIgnorar = {
         'AGENDA': ['REALIZADO', 'CANCELADO'],
         'PERICIA': ['REALIZADA', 'CANCELADA', 'CONCLUÍDA', 'CONCLUIDA'],
-        'ATIVIDADE': ['CONFERIDO', 'PROTOCOLADO', 'FINALIZADO'],
+        // CONFERIDO removido: estagiário precisa ser notificado para PROTOCOLAR
+        'ATIVIDADE': ['PROTOCOLADO', 'FINALIZADO'],
         'PROCESSO': ['FINALIZADO', 'ARQUIVADO', 'CONCLUÍDO', 'CONCLUIDO']
     };
     
@@ -78,13 +79,13 @@ async function verificarNotificacoes() {
         
         const usuario = auth.getUsuario();
         const isTitular = usuario && (usuario.role === 'ADM' || usuario.role === 'ADVOGADO TITULAR');
+        const perfil = isTitular ? 'titular' : 'estagiario';
         
         const novasNotificacoes = [];
         
         // 1. PROCESSOS (para todos) - Ignora FINALIZADO, ARQUIVADO, CONCLUÍDO
         const processos = await carregarComCache('PROCESSOS').catch(() => []);
         processos.forEach(p => {
-            // Verifica se o status deve ser ignorado
             if (!statusDeveNotificar('PROCESSO', p.STATUS)) return;
             
             const dataFinal = p['DATA FINAL'] || p.PRAZO || p['DATA DA INTIMAÇÃO'];
@@ -112,7 +113,7 @@ async function verificarNotificacoes() {
                 }
                 
                 novasNotificacoes.push({
-                    id: `prazo_${p._row}`,
+                    id: `prazo_${p._row}_${perfil}`,
                     titulo: '📋 Prazo Processual',
                     mensagem: `${mensagem} - ${p.CLIENTE || 'Cliente'} (${p['N PROCESSO'] || 's/n'})`,
                     tipo: tipo,
@@ -158,7 +159,7 @@ async function verificarNotificacoes() {
                 const beneficio = p['TIPO DE BENEFICIO'] ? ` · ${p['TIPO DE BENEFICIO']}` : '';
                 
                 novasNotificacoes.push({
-                    id: `pericia_${p._row}`,
+                    id: `pericia_${p._row}_${perfil}`,
                     titulo: '🩺 Perícia Agendada',
                     mensagem: `${mensagem} - ${cliente}${beneficio}`,
                     tipo: tipo,
@@ -202,10 +203,10 @@ async function verificarNotificacoes() {
                 
                 const cliente = e['Cliente/Parte'] || e.CLIENTE || 'Cliente não informado';
                 const tipoEvento = e['Tipo de Evento'] || e.TIPO || 'Evento';
-                const horario = e.Horário || e.HORARIO ? ` às ${e.Horário || e.HORARIO}` : '';
+                const horario = (e.Horário || e.HORARIO) ? ` às ${e.Horário || e.HORARIO}` : '';
                 
                 novasNotificacoes.push({
-                    id: `agenda_${e._row}`,
+                    id: `agenda_${e._row}_${perfil}`,
                     titulo: `📅 ${tipoEvento}`,
                     mensagem: `${mensagem} - ${cliente}${horario}`,
                     tipo: tipo,
@@ -218,20 +219,27 @@ async function verificarNotificacoes() {
             }
         });
         
-        // 4. ATIVIDADES (por perfil) - Ignora CONFERIDO, PROTOCOLADO, FINALIZADO
+        // 4. ATIVIDADES (por perfil)
+        //    - Titular:     vê EM ANÁLISE e CORRIGIR
+        //    - Estagiário:  vê CORRIGIR e CONFERIDO (este último para protocolar)
+        //    - Ignora quem já está com SITUACAO = PROTOCOLADO
         const atividades = await carregarComCache('ATIVIDADES').catch(() => []);
         let atividadesFiltradas = [];
         
         if (isTitular) {
-            atividadesFiltradas = atividades.filter(a => 
-                (a.STATUS === 'EM ANÁLISE' || a.STATUS === 'CORRIGIR') &&
-                statusDeveNotificar('ATIVIDADE', a.STATUS)
-            );
+            atividadesFiltradas = atividades.filter(a => {
+                const st = String(a.STATUS || '').toUpperCase();
+                return (st === 'EM ANÁLISE' || st === 'CORRIGIR') &&
+                       statusDeveNotificar('ATIVIDADE', a.STATUS);
+            });
         } else {
-            atividadesFiltradas = atividades.filter(a => 
-                a.STATUS === 'CORRIGIR' &&
-                statusDeveNotificar('ATIVIDADE', a.STATUS)
-            );
+            atividadesFiltradas = atividades.filter(a => {
+                const st = String(a.STATUS || '').toUpperCase();
+                const sit = String(a.SITUACAO || a.SITUAÇÃO || '').toUpperCase();
+                if (sit === 'PROTOCOLADO') return false;
+                return (st === 'CORRIGIR' || st === 'CONFERIDO') &&
+                       statusDeveNotificar('ATIVIDADE', a.STATUS);
+            });
         }
         
         atividadesFiltradas.forEach(a => {
@@ -242,14 +250,22 @@ async function verificarNotificacoes() {
             if (diff === null) return;
             
             if ((diff < 0 && diff >= -7) || (diff >= 0 && diff <= 7)) {
+                const st = String(a.STATUS || '').toUpperCase();
                 let mensagem = '';
                 let tipo = '';
+                let titulo = '';
                 
-                if (a.STATUS === 'CORRIGIR') {
+                if (st === 'CORRIGIR') {
                     mensagem = `📝 Atividade para CORRIGIR - ${a.CLIENTE}`;
+                    titulo = '⚠️ Corrigir Atividade';
                     tipo = 'urgent';
+                } else if (st === 'CONFERIDO') {
+                    mensagem = `📄 Atividade APROVADA para PROTOCOLAR - ${a.CLIENTE}`;
+                    titulo = '📄 Protocolo Pendente';
+                    tipo = 'warning';
                 } else {
                     mensagem = `📋 Atividade em ANÁLISE - ${a.CLIENTE}`;
+                    titulo = '📋 Atividade em Análise';
                     tipo = 'warning';
                 }
                 
@@ -264,8 +280,8 @@ async function verificarNotificacoes() {
                 }
                 
                 novasNotificacoes.push({
-                    id: `atividade_${a._row}`,
-                    titulo: a.STATUS === 'CORRIGIR' ? '⚠️ Corrigir Atividade' : '📋 Atividade em Análise',
+                    id: `atividade_${a._row}_${perfil}`,
+                    titulo: titulo,
                     mensagem: `${mensagem} (${a['TIPO DE PRAZO'] || 'Prazo'})`,
                     tipo: tipo,
                     data: new Date().toISOString(),
@@ -278,7 +294,7 @@ async function verificarNotificacoes() {
             }
         });
         
-        // Adiciona notificações novas (evita duplicatas)
+        // Adiciona notificações novas (evita duplicatas por id+perfil)
         let adicionadas = 0;
         novasNotificacoes.forEach(nova => {
             const existe = notificacoes.some(n => n.id === nova.id);
@@ -467,6 +483,7 @@ function renderizarNotificacoes() {
         else if (n.titulo.includes('Perícia')) icone = '🩺';
         else if (n.titulo.includes('Agenda') || n.titulo.includes('Evento')) icone = '📅';
         else if (n.titulo.includes('Corrigir')) icone = '⚠️';
+        else if (n.titulo.includes('Protocolo')) icone = '📄';
         else if (n.titulo.includes('Análise')) icone = '📋';
         else icone = '🔔';
         
@@ -521,4 +538,4 @@ window.limparNotificacoes = limparNotificacoes;
 window.getNotificacoes = getNotificacoes;
 window.getNotificacoesNaoLidas = getNotificacoesNaoLidas;
 
-//console.log('🔔 Módulo de notificações carregado (com filtros de status concluídos)');
+//console.log('🔔 Módulo de notificações carregado (v2.0 — perfil + CONFERIDO)');
