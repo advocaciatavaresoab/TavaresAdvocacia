@@ -810,8 +810,8 @@ async function salvarCliente() {
         ? formatarMoeda(calcularRendimentoCliente(nomeCliente))
         : 'R$ 0,00';
 
-    if (!dados['NOME'] || !dados['CONTATO']) {
-        notificar('Preencha Nome e Contato!', 'warning');
+    if (!dados['NOME'] || !dados['CPF']) {
+        notificar('Preencha Nome e CPF/CNPJ!', 'warning');
         return;
     }
 
