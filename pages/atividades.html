@@ -16,6 +16,7 @@
 <!-- Filtros rápidos -->
 <div class="filtros-rapidos" style="display: flex; gap: 0.5rem; margin-bottom: var(--space-4); flex-wrap: wrap;">
     <button class="filtro-btn active" data-filtro="todos">Todos</button>
+    <button class="filtro-btn" data-filtro="EM PRODUÇÃO">Em produção</button>
     <button class="filtro-btn" data-filtro="CORRIGIR">Corrigir</button>
     <button class="filtro-btn" data-filtro="EM ANÁLISE">Em análise</button>
     <button class="filtro-btn" data-filtro="CONFERIDO">Conferido</button>
@@ -73,19 +74,19 @@
                             <option value="">Selecione um cliente...</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Processo *</label>
                         <select id="atividadeProcesso" required disabled>
                             <option value="">Selecione um cliente primeiro...</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Prazo *</label>
                         <input type="date" id="atividadePrazo" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Tipo de Prazo *</label>
                         <select id="atividadeTipoPrazo" required>
@@ -106,7 +107,7 @@
                             <option value="INFORMAR ENDEREÇO">INFORMAR ENDEREÇO</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Responsável *</label>
                         <select id="atividadeResponsavel" required>
@@ -115,17 +116,7 @@
                             <option value="IZAAC MANGUEIRA TAVARES">IZAAC MANGUEIRA TAVARES</option>
                         </select>
                     </div>
-                    
-                    <div class="form-group">
-                        <label>Status *</label>
-                        <select id="atividadeStatus" required>
-                            <option value="">Selecione...</option>
-                            <option value="CORRIGIR">Corrigir</option>
-                            <option value="EM ANÁLISE">Em análise</option>
-                            <option value="CONFERIDO">Conferido</option>
-                        </select>
-                    </div>
-                    
+
                     <div class="form-group">
                         <label>Situação *</label>
                         <select id="atividadeSituacao" required>

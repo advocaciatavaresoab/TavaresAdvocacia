@@ -14,8 +14,8 @@ const PERMISSOES_POR_ROLE = {
 // Fallback para login local (caso a planilha não esteja disponível)
 const USUARIOS_LOCAL_FALLBACK = {
     'advogado': {
-        senha: 'tavares2024',
-        nome: 'Dr. Tavares',
+        senha: 'ADM481562342',
+        nome: 'ADM',
         role: 'ADVOGADO TITULAR',
         permissoes: ['*']
     },

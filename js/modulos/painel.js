@@ -224,7 +224,7 @@ function preencherAtividadesPendentes(atividades) {
     const pendentes = atividades.filter(a => {
         if (norm(a.SITUACAO || a.SITUAÇÃO) === 'PROTOCOLADO') return false;
         const s = norm(a.STATUS);
-        return s === 'EM ANÁLISE' || s === 'CORRIGIR' || s === 'CONFERIDO';
+        return s === 'EM ANÁLISE' || s === 'CORRIGIR' || s === 'CONFERIDO' || s === 'EM PRODUÇÃO';
     });
 
     const emAnalise  = pendentes.filter(a => norm(a.STATUS) === 'EM ANÁLISE');
