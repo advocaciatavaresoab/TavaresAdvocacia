@@ -36,8 +36,8 @@ let usuariosCarregados = false;
 // ==================== TODAS AS PÁGINAS DO SISTEMA ====================
 const TODAS_PAGINAS = [
     { id: 'painel', icone: 'fa-solid fa-layer-group', nome: 'Painel' },
-    { id: 'processos', icone: 'fas fa-gavel', nome: 'Processos' },
     { id: 'clientes', icone: 'fas fa-users', nome: 'Clientes' },
+    { id: 'processos', icone: 'fas fa-gavel', nome: 'Processos' },
     { id: 'parceiros', icone: 'fa-solid fa-handshake', nome: 'Parceiros' },
     { id: 'agenda', icone: 'fas fa-calendar-alt', nome: 'Agenda' },
     { id: 'atividades', icone: 'fas fa-tasks', nome: 'Atividades' },

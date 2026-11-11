@@ -24,10 +24,6 @@
         <div><h4>Em andamento</h4><span id="processosAndamento">0</span></div>
     </div>
     <div class="stat-card-mini">
-        <i class="fas fa-clock"></i>
-        <div><h4>Prazos vencidos</h4><span id="prazosVencidos">0</span></div>
-    </div>
-    <div class="stat-card-mini">
         <i class="fas fa-trophy"></i>
         <div><h4>Aprovados</h4><span id="processosAprovados">0</span></div>
     </div>
@@ -78,8 +74,6 @@
                         <th>Ação</th>
                         <th>Local</th>
                         <th>Responsável</th>
-                        <th>Prazo</th>
-                        <th>Sit. Prazo</th>
                         <th>Status</th>
                         <th>Status Pag.</th>
                         <th>Resultado</th>
@@ -89,7 +83,7 @@
                 </thead>
                 <tbody id="tbodyProcessos">
                     <tr class="row-empty">
-                        <td colspan="13">
+                        <td colspan="11">
                             <i class="fas fa-spinner fa-pulse"></i> Carregando processos...
                         </td>
                     </tr>
@@ -127,8 +121,6 @@
                         <th>Ação</th>
                         <th>Local</th>
                         <th>Responsável</th>
-                        <th>Prazo</th>
-                        <th>Sit. Prazo</th>
                         <th>Status</th>
                         <th>Status Pag.</th>
                         <th>Resultado</th>
@@ -138,7 +130,7 @@
                 </thead>
                 <tbody id="tbodyProcessosRemovidos">
                     <tr class="row-empty">
-                        <td colspan="13">
+                        <td colspan="11">
                             <i class="fas fa-spinner fa-pulse"></i> Carregando processos excluídos...
                         </td>
                     </tr>
@@ -181,26 +173,6 @@
                     <div class="form-group">
                         <label>Nº Processo *</label>
                         <input type="text" id="processoNumero" required placeholder="0000000-00.0000.0.00.0000">
-                    </div>
-                    
-                    <!-- Tipo de Prazo -->
-                    <div class="form-group">
-                        <label>Tipo de Prazo</label>
-                        <select id="processoTipoPrazo">
-                            <option value="">Selecione...</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Data da Intimação -->
-                    <div class="form-group">
-                        <label>Data da Intimação</label>
-                        <input type="date" id="processoDataIntimacao">
-                    </div>
-                    
-                    <!-- Prazo (dias) -->
-                    <div class="form-group">
-                        <label>Prazo (dias)</label>
-                        <input type="number" id="processoPrazoDias" placeholder="15" min="0" value="15">
                     </div>
                     
                     <!-- Responsável -->

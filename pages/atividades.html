@@ -36,7 +36,7 @@
                 <tr>
                     <th>Cliente</th>
                     <th>Processo</th>
-                    <th>Prazo</th>
+                    <th>Data da Intimação</th>
                     <th>Tipo de Prazo</th>
                     <th>Responsável</th>
                     <th>Status</th>
@@ -83,29 +83,20 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Prazo *</label>
-                        <input type="date" id="atividadePrazo" required>
+                        <label>Data da Intimação *</label>
+                        <input type="date" id="atividadeDataIntimacao" required>
                     </div>
 
                     <div class="form-group">
                         <label>Tipo de Prazo *</label>
                         <select id="atividadeTipoPrazo" required>
                             <option value="">Selecione...</option>
-                            <option value="RECURSO">Recurso</option>
-                            <option value="CONTESTAÇÃO">Contestação</option>
-                            <option value="IMPUGNAÇÃO">Impugnação</option>
-                            <option value="MANIFESTAÇÃO">Manifestação</option>
-                            <option value="INICIAL">Inicial</option>
-                            <option value="PROTOCOLAR">Protocolizar</option>
-                            <option value="EMBARGOS">Embargos</option>
-                            <option value="PRORROGAÇÃO">Prorrogação</option>
-                            <option value="EXIGÊNCIA INSS">Exigência INSS</option>
-                            <option value="MARCA PERÍCIA">MARCA PERÍCIA</option>
-                            <option value="CONTRARRAZÕES">CONTRARRAZÕES</option>
-                            <option value="ALEGAÇÕES FINAIS">ALEGAÇÕES FINAIS</option>
-                            <option value="EMENDA Á INICIAL">EMENDA Á INICIAL</option>
-                            <option value="INFORMAR ENDEREÇO">INFORMAR ENDEREÇO</option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Prazo (dias) *</label>
+                        <input type="number" id="atividadePrazoDias" placeholder="15" min="1" value="15" required>
                     </div>
 
                     <div class="form-group">

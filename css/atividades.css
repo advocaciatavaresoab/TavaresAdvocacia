@@ -97,3 +97,23 @@
     background: var(--danger-50);
     color: var(--danger);
 }
+
+/* Status + pastinha do Drive */
+.status-com-pasta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.link-pasta {
+    color: var(--gold-600);
+    font-size: 0.95rem;
+    line-height: 1;
+    text-decoration: none;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.link-pasta:hover {
+    color: var(--gold-700);
+    transform: scale(1.15);
+}

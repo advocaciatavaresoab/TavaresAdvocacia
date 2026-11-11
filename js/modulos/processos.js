@@ -1,4 +1,3 @@
-
 // ==================== ESTADO ====================
 let todosProcessos = [];
 let todosProcessosRemovidos = [];
@@ -9,7 +8,6 @@ let listaClientes = [];
 let editandoProcesso = false;
 let definicoes = {};
 let abaAtual = 'ativos';
-let intervaloPrazos = null;
 
 // ==================== VERIFICAR PERMISSÕES ====================
 function isTitular() {
@@ -32,72 +30,6 @@ function lerMoedaInput(id) {
     return moeda(document.getElementById(id)?.value);
 }
 
-// ==================== CALCULAR DIAS ÚTEIS ====================
-function calcularDiasUteis(dataInicio, dias) {
-    if (!dataInicio || !dias) return '';
-
-    const data = new Date(dataInicio);
-    let diasUteisContados = 0;
-
-    while (diasUteisContados < dias) {
-        data.setDate(data.getDate() + 1);
-        const diaSemana = data.getDay();
-        if (diaSemana !== 0 && diaSemana !== 6) {
-            diasUteisContados++;
-        }
-    }
-
-    const ano = data.getFullYear();
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
-    const dia = String(data.getDate()).padStart(2, '0');
-    return `${ano}-${mes}-${dia}`;
-}
-
-// ==================== CALCULAR SITUAÇÃO DO PRAZO (TEMPO REAL) ====================
-function calcularSituacaoPrazoEmTempoReal(dataFinal, status) {
-    if (status === 'FINALIZADO') {
-        return { texto: '✅ FINALIZADO', classe: 'completed', diasRestantes: 0 };
-    }
-
-    if (!dataFinal) return { texto: 'PRAZO OK', classe: 'active', diasRestantes: 0 };
-
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const data = new Date(dataFinal);
-    data.setHours(0, 0, 0, 0);
-
-    const diff = Math.ceil((data - hoje) / (1000 * 60 * 60 * 24));
-
-    if (diff < 0) {
-        return { texto: `VENCIDO (${Math.abs(diff)}d)`, classe: 'urgent', diasRestantes: diff };
-    }
-    if (diff === 0) {
-        return { texto: 'VENCE HOJE', classe: 'pending', diasRestantes: 0 };
-    }
-    if (diff <= 7) {
-        return { texto: `${diff} dias`, classe: 'pending', diasRestantes: diff };
-    }
-    return { texto: `${diff} dias`, classe: 'active', diasRestantes: diff };
-}
-
-// ==================== ATUALIZAR PRAZOS EM TEMPO REAL ====================
-function iniciarAtualizacaoPrazos() {
-    if (intervaloPrazos) {
-        clearInterval(intervaloPrazos);
-    }
-
-    intervaloPrazos = setInterval(() => {
-        if (abaAtual === 'ativos') {
-            aplicarFiltrosProcessos();
-        }
-        if (abaAtual === 'removidos') {
-            aplicarFiltrosProcessosRemovidos();
-        }
-    }, 300000);
-
-    //console.log('🔄 Atualização de prazos iniciada (a cada 5 minutos)');
-}
-
 // ==================== CARREGAR DEFINIÇÕES E POPULAR SELECTS ====================
 async function carregarDefinicoesEPopularSelects() {
     try {
@@ -105,7 +37,6 @@ async function carregarDefinicoesEPopularSelects() {
 
         const novasDefinicoes = {
             'TIPO PROCESSO': [],
-            'TIPO DE PRAZO': [],
             'TIPO DE ACAO': [],
             'LOCAL DO PROCESSO': []
         };
@@ -137,7 +68,6 @@ async function carregarDefinicoesEPopularSelects() {
         console.error('❌ Erro ao carregar definições:', error);
         definicoes = {
             'TIPO PROCESSO': [],
-            'TIPO DE PRAZO': [],
             'TIPO DE ACAO': [],
             'LOCAL DO PROCESSO': []
         };
@@ -149,7 +79,6 @@ async function carregarDefinicoesEPopularSelects() {
 function popularSelects() {
     const selects = [
         { id: 'processoTipo', key: 'TIPO PROCESSO' },
-        { id: 'processoTipoPrazo', key: 'TIPO DE PRAZO' },
         { id: 'processoTipoAcao', key: 'TIPO DE ACAO' },
         { id: 'processoLocal', key: 'LOCAL DO PROCESSO' }
     ];
@@ -385,10 +314,10 @@ async function inicializarProcessos() {
     await carregarProcessosRemovidos();
 
     initEventosProcessos();
+    criarBarraRolagemSuperior();
     aplicarPermissoes();
 
     trocarAbaProcessos('ativos');
-    iniciarAtualizacaoPrazos();
 }
 
 function aguardarElementosProcessos() {
@@ -403,6 +332,49 @@ function aguardarElementosProcessos() {
             }
         };
         check();
+    });
+}
+
+// ==================== BARRA DE ROLAGEM NO TOPO DA TABELA ====================
+/**
+ * Cria uma barra de rolagem horizontal acima de cada tabela (ativos e removidos),
+ * sincronizada com a da própria tabela. Só aparece quando a tabela é mais larga que a tela.
+ */
+function criarBarraRolagemSuperior() {
+    document.querySelectorAll('#tabAtivos .table-container, #tabRemovidos .table-container').forEach(container => {
+        if (container.dataset.barraTopo === '1') return;
+        const table = container.querySelector('table');
+        if (!table || !container.parentNode) return;
+        container.dataset.barraTopo = '1';
+
+        const barra = document.createElement('div');
+        barra.className = 'scroll-topo';
+        const interno = document.createElement('div');
+        interno.className = 'scroll-topo-interno';
+        barra.appendChild(interno);
+        container.parentNode.insertBefore(barra, container);
+
+        // Uma barra acompanha a outra (atribuir o mesmo valor não gera novo evento)
+        barra.addEventListener('scroll', () => {
+            if (container.scrollLeft !== barra.scrollLeft) container.scrollLeft = barra.scrollLeft;
+        });
+        container.addEventListener('scroll', () => {
+            if (barra.scrollLeft !== container.scrollLeft) barra.scrollLeft = container.scrollLeft;
+        });
+
+        const atualizar = () => {
+            interno.style.width = container.scrollWidth + 'px';
+            barra.style.display = container.scrollWidth > container.clientWidth + 1 ? 'block' : 'none';
+        };
+
+        if ('ResizeObserver' in window) {
+            const observador = new ResizeObserver(atualizar);
+            observador.observe(container);
+            observador.observe(table);
+        } else {
+            window.addEventListener('resize', atualizar);
+        }
+        atualizar();
     });
 }
 
@@ -474,30 +446,6 @@ function initEventosProcessos() {
         }
     });
 
-    ['processoDataIntimacao', 'processoPrazoDias'].forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        ['change', 'input'].forEach(evento => {
-            el.addEventListener(evento, function () {
-                if (!editandoProcesso) calcularDataFinalAutomatico();
-            });
-        });
-    });
-}
-
-// ==================== CALCULAR DATA FINAL AUTOMÁTICO ====================
-function calcularDataFinalAutomatico() {
-    const dataIntimacao = document.getElementById('processoDataIntimacao')?.value;
-    const prazoDias = parseInt(document.getElementById('processoPrazoDias')?.value) || 0;
-
-    if (dataIntimacao && prazoDias > 0) {
-        const dataFinal = calcularDiasUteis(dataIntimacao, prazoDias);
-        const campoDataFinal = document.getElementById('processoDataFinal');
-        if (campoDataFinal) {
-            campoDataFinal.value = dataFinal;
-            //console.log(`📅 Data Final calculada: ${dataFinal} (${prazoDias} dias úteis)`);
-        }
-    }
 }
 
 // ==================== CALCULAR VALOR DA CAUSA ====================
@@ -598,18 +546,11 @@ function atualizarStatsProcessos() {
     const andamento = todosProcessos.filter(p => p.STATUS === 'EM ANDAMENTO').length;
     const aprovados = todosProcessos.filter(p => p.RESULTADO === 'APROVADO').length;
 
-    const prazosVencidos = todosProcessos.filter(p => {
-        if (p.STATUS === 'FINALIZADO') return false;
-        const situacao = calcularSituacaoPrazoEmTempoReal(p['DATA FINAL'], p.STATUS);
-        return situacao.classe === 'urgent';
-    }).length;
-
     let honorariosTotal = 0;
     todosProcessos.forEach(p => { honorariosTotal += parseValor(p.HONORARIOS); });
 
     setText('totalProcessos', total);
     setText('processosAndamento', andamento);
-    setText('prazosVencidos', prazosVencidos);
     setText('processosAprovados', aprovados);
     setText('honorariosTotal', formatarMoeda(honorariosTotal));
     setText('badgeProcessos', total);
@@ -670,7 +611,7 @@ function renderizarTabelaProcessos(processos) {
     if (!tbody) return;
 
     if (!processos.length) {
-        tbody.innerHTML = '<tr class="row-empty"><td colspan="13"><i class="fas fa-search"></i> Nenhum processo encontrado</td></tr>';
+        tbody.innerHTML = '<tr class="row-empty"><td colspan="11"><i class="fas fa-search"></i> Nenhum processo encontrado</td></tr>';
         return;
     }
 
@@ -679,9 +620,6 @@ function renderizarTabelaProcessos(processos) {
     tbody.innerHTML = processos.map(p => {
         const num = esc(p['N PROCESSO']);
 
-        const situacaoPrazo = calcularSituacaoPrazoEmTempoReal(p['DATA FINAL'], p.STATUS);
-        const prazoClass = situacaoPrazo.classe;
-        const situacaoTexto = situacaoPrazo.texto;
 
         const isAprovado = p.RESULTADO === 'APROVADO';
         const resultadoClass = isAprovado ? 'completed' :
@@ -747,8 +685,6 @@ function renderizarTabelaProcessos(processos) {
                 <td>${esc(p['TIPO DE ACAO'])}</td>
                 <td>${esc(p['LOCAL PROCESSO'])}</td>
                 <td>${esc(p.RESPONSÁVEL)}</td>
-                <td><span class="mono-text">${formatarData(p['DATA FINAL'])}</span></td>
-                <td><span class="status ${prazoClass}" title="${situacaoTexto}">${situacaoTexto}</span></td>
                 <td>${statusHtml}</td>
                 <td>${statusPagHtml}</td>
                 <td><span class="status ${resultadoClass}">${esc(p.RESULTADO)}</span></td>
@@ -771,15 +707,12 @@ function renderizarTabelaProcessosRemovidos(processos) {
     if (!tbody) return;
 
     if (!processos.length) {
-        tbody.innerHTML = '<tr class="row-empty"><td colspan="13"><i class="fas fa-search"></i> Nenhum processo excluído encontrado</td></tr>';
+        tbody.innerHTML = '<tr class="row-empty"><td colspan="11"><i class="fas fa-search"></i> Nenhum processo excluído encontrado</td></tr>';
         return;
     }
 
     tbody.innerHTML = processos.map(p => {
         const num = esc(p['N PROCESSO']);
-        const situacaoPrazo = calcularSituacaoPrazoEmTempoReal(p['DATA FINAL'], p.STATUS);
-        const prazoClass = situacaoPrazo.classe;
-        const situacaoTexto = situacaoPrazo.texto;
         const resultadoClass = p.RESULTADO === 'APROVADO' ? 'completed' :
                                p.RESULTADO === 'NEGADO' ? 'urgent' : 'pending';
 
@@ -794,8 +727,6 @@ function renderizarTabelaProcessosRemovidos(processos) {
                 <td>${esc(p['TIPO DE ACAO'])}</td>
                 <td>${esc(p['LOCAL PROCESSO'])}</td>
                 <td>${esc(p.RESPONSÁVEL)}</td>
-                <td><span class="mono-text">${formatarData(p['DATA FINAL'])}</span></td>
-                <td><span class="status ${prazoClass}" title="${situacaoTexto}">${situacaoTexto}</span></td>
                 <td><span class="status ${getStatusClass(p.STATUS)}">${esc(p.STATUS)}</span></td>
                 <td><span class="status-pag ${statusPagClass}">${esc(statusPagAtual)}</span></td>
                 <td><span class="status ${resultadoClass}">${esc(p.RESULTADO)}</span></td>
@@ -851,7 +782,6 @@ function verDetalhesProcessoRemovido(row) {
         return;
     }
 
-    const situacaoPrazo = calcularSituacaoPrazoEmTempoReal(p['DATA FINAL'], p.STATUS);
     const statusPagAtual = p.STATUS_PAG || 'PENDENTE';
     const statusPagClass = statusPagAtual.toLowerCase();
 
@@ -867,8 +797,6 @@ function verDetalhesProcessoRemovido(row) {
             <div class="detalhe-item"><label>Tipo de Ação</label><p>${esc(p['TIPO DE ACAO']) || '—'}</p></div>
             <div class="detalhe-item"><label>Local</label><p>${esc(p['LOCAL PROCESSO']) || '—'}</p></div>
             <div class="detalhe-item"><label>Responsável</label><p>${esc(p.RESPONSÁVEL) || '—'}</p></div>
-            <div class="detalhe-item"><label>Data Final</label><p>${formatarData(p['DATA FINAL']) || '—'}</p></div>
-            <div class="detalhe-item"><label>Situação do Prazo</label><p><span class="status ${situacaoPrazo.classe}">${situacaoPrazo.texto}</span></p></div>
             <div class="detalhe-item"><label>Status</label><p>${esc(p.STATUS)}</p></div>
             <div class="detalhe-item"><label>Status Pagamento</label><p><span class="status-pag ${statusPagClass}">${esc(statusPagAtual)}</span></p></div>
             <div class="detalhe-item"><label>Resultado</label><p>${esc(p.RESULTADO)}</p></div>
@@ -925,7 +853,6 @@ function verDetalhesProcesso(row) {
     if (!modal || !body) return;
 
     const titular = isTitular();
-    const situacaoPrazo = calcularSituacaoPrazoEmTempoReal(p['DATA FINAL'], p.STATUS);
     const statusPagAtual = p.STATUS_PAG || 'PENDENTE';
     const statusPagClass = statusPagAtual.toLowerCase();
 
@@ -942,8 +869,6 @@ function verDetalhesProcesso(row) {
             <div class="detalhe-item"><label>Tipo de Ação</label><p>${esc(p['TIPO DE ACAO']) || '—'}</p></div>
             <div class="detalhe-item"><label>Local</label><p>${esc(p['LOCAL PROCESSO']) || '—'}</p></div>
             <div class="detalhe-item"><label>Responsável</label><p>${esc(p.RESPONSÁVEL) || '—'}</p></div>
-            <div class="detalhe-item"><label>Data Final</label><p>${formatarData(p['DATA FINAL']) || '—'}</p></div>
-            <div class="detalhe-item"><label>Situação do Prazo</label><p><span class="status ${situacaoPrazo.classe}">${situacaoPrazo.texto}</span></p></div>
             <div class="detalhe-item"><label>Status</label><p>${esc(p.STATUS)}</p></div>
             <div class="detalhe-item"><label>Status Pagamento</label><p><span class="status-pag ${statusPagClass}">${esc(statusPagAtual)}</span></p></div>
             <div class="detalhe-item"><label>Resultado</label><p>${esc(p.RESULTADO)}</p></div>
@@ -973,12 +898,9 @@ function abrirModalProcesso(modo, dados) {
         document.getElementById('processoRow').value = '';
         document.getElementById('salvarProcesso').disabled = false;
         document.getElementById('salvarProcesso').innerHTML = '<i class="fas fa-save"></i> Salvar';
-        document.getElementById('processoDataIntimacao').value = new Date().toISOString().split('T')[0];
-        document.getElementById('processoPrazoDias').value = 15;
         document.getElementById('processoStatus').value = 'EM ANDAMENTO';
         document.getElementById('processoStatusPag').value = 'PENDENTE';
         document.getElementById('processoResultado').value = 'AGUARDANDO';
-        setTimeout(() => calcularDataFinalAutomatico(), 100);
     }
 
     carregarClientesSelect();
@@ -995,11 +917,6 @@ function abrirModalProcesso(modo, dados) {
         setValor('processoCliente', dados.CLIENTE);
         setValor('processoNumero', dados['N PROCESSO']);
         setValor('processoTipo', dados['TIPO PROCESSO']);
-        setValor('processoTipoPrazo', dados['TIPO DE PRAZO']);
-        setValor('processoDataIntimacao', converterDataISO(dados['DATA DA INTIMAÇÃO']));
-        setValor('processoPrazoDias', dados['PRAZO (DIAS)']);
-        setValor('processoDataFinal', converterDataISO(dados['DATA FINAL']));
-        setValor('processoSituacaoPrazo', dados['SITUAÇÃO DO PRAZO']);
         setValor('processoResponsavel', dados.RESPONSÁVEL);
         setValor('processoTipoAcao', dados['TIPO DE ACAO']);
         setValor('processoLocal', dados['LOCAL PROCESSO']);
@@ -1016,9 +933,6 @@ function abrirModalProcesso(modo, dados) {
     modal.classList.add('active');
     setTimeout(() => {
         calcularValorCausa();
-        if (modo === 'edicao') {
-            calcularDataFinalAutomatico();
-        }
         editandoProcesso = false;
     }, 300);
 }
@@ -1041,21 +955,13 @@ async function salvarProcesso() {
     }
 
     const row = document.getElementById('processoRow')?.value;
-    const dataIntimacao = document.getElementById('processoDataIntimacao')?.value || '';
-    const prazoDias = parseInt(document.getElementById('processoPrazoDias')?.value) || 0;
-    const dataFinal = dataIntimacao && prazoDias > 0 ? calcularDiasUteis(dataIntimacao, prazoDias) : '';
     const valorCausa = calcularValorCausa();
 
     const dados = {
         'TIPO PROCESSO': document.getElementById('processoTipo')?.value || '',
         'CLIENTE': document.getElementById('processoCliente')?.value || '',
         'N PROCESSO': document.getElementById('processoNumero')?.value?.trim() || '',
-        'TIPO DE PRAZO': document.getElementById('processoTipoPrazo')?.value || '',
-        'DATA DA INTIMAÇÃO': dataIntimacao,
-        'PRAZO (DIAS)': prazoDias,
-        'DATA FINAL': dataFinal,
         'RESPONSÁVEL': document.getElementById('processoResponsavel')?.value || '',
-        'SITUAÇÃO DO PRAZO': '',
         'TIPO DE ACAO': document.getElementById('processoTipoAcao')?.value || '',
         'LOCAL PROCESSO': document.getElementById('processoLocal')?.value || '',
         'HONORARIOS': lerMoedaInput('processoHonorarios'),
