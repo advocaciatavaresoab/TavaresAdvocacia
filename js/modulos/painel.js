@@ -214,6 +214,28 @@ function mostrarErroPainel() {
 }
 // ==================== ATIVIDADES PENDENTES ====================
 
+// Data da intimação + prazo em dias úteis (não conta o dia da intimação).
+// Retorna 'YYYY-MM-DD' ou ''.
+function vencimentoDaAtividade(a) {
+    const intimacao = String(a['DATA DA INTIMACAO'] || a['DATA DA INTIMAÇÃO'] || '').substring(0, 10);
+    const dias = parseInt(a['PRAZO (DIAS)'], 10) || 0;
+
+    // Linhas antigas, que ainda só têm PRAZO
+    if (!intimacao || dias < 1) return a.PRAZO || '';
+
+    const [ano, mes, dia] = intimacao.split('-').map(Number);
+    if (!ano || !mes || !dia) return '';
+
+    const d = new Date(ano, mes - 1, dia);
+    let contados = 0;
+    while (contados < dias) {
+        d.setDate(d.getDate() + 1);
+        const dow = d.getDay();
+        if (dow !== 0 && dow !== 6) contados++;
+    }
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 function preencherAtividadesPendentes(atividades) {
     const tbody = document.getElementById('tabelaAtividadesPendentes');
     if (!tbody) return;
@@ -246,10 +268,10 @@ function preencherAtividadesPendentes(atividades) {
         return;
     }
 
-    // Ordena por prazo (mais próximo primeiro)
+    // Ordena pelo vencimento (intimação + prazo em dias úteis), mais próximo primeiro
     pendentes.sort((a, b) => {
-        const da = new Date(a.PRAZO || 0);
-        const db = new Date(b.PRAZO || 0);
+        const da = new Date(vencimentoDaAtividade(a) || 0);
+        const db = new Date(vencimentoDaAtividade(b) || 0);
         return da - db;
     });
 
@@ -260,14 +282,18 @@ function preencherAtividadesPendentes(atividades) {
         const st = norm(a.STATUS);
         const statusClass = st === 'EM ANÁLISE' ? 'pending' : st === 'CONFERIDO' ? 'completed' : 'urgent';
         const situacaoClass = norm(a.SITUACAO || a.SITUAÇÃO) === 'AGUARDANDO' ? 'pending' : 'completed';
-        const prazoClass = getPrazoClass(a.PRAZO);
+
+        // A coluna mostra a data da intimação; a cor segue o vencimento
+        const vencimento = vencimentoDaAtividade(a);
+        const prazoClass = getPrazoClass(vencimento);
+        const intimacao = String(a['DATA DA INTIMACAO'] || a['DATA DA INTIMAÇÃO'] || a.PRAZO || '').substring(0, 10);
 
         return `
             <tr class="atividade-clickable" data-row="${a._row}" style="cursor: pointer;">
                 <td><strong>${esc(a.CLIENTE)}</strong></td>
                 <td><span class="mono-text">${esc(a.PROCESSO)}</span></td>
                 <td><span class="badge-tipo-prazo">${esc(a['TIPO DE PRAZO'])}</span></td>
-                <td><span class="data-prazo ${prazoClass}">${formatarData(a.PRAZO)}</span></td>
+                <td><span class="data-prazo ${prazoClass}" title="${vencimento ? 'Vence em ' + formatarData(vencimento) : ''}">${formatarData(intimacao)}</span></td>
                 <td>${esc(a.RESPONSAVEL)}</td>
                 <td><span class="status ${statusClass}">${esc(a.STATUS)}</span></td>
                 <td><span class="status ${situacaoClass}">${esc(a.SITUACAO || a.SITUAÇÃO)}</span></td>
